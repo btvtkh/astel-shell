@@ -10,10 +10,10 @@ gi.require_version("AstalNotifd", "0.1")
 gi.require_version("AstalTray", "0.1")
 
 from gi.repository import GLib
-from app import ShellApp
+from app import App
 
 if __name__ == "__main__":
-    app = ShellApp()
+    app = App()
     GLib.set_prgname("Astel-Shell")
     try:
         app.run()

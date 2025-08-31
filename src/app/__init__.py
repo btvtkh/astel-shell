@@ -7,14 +7,14 @@ from ui.notifications import Notifications
 from ui.launcher import Launcher
 from ui.powermenu import Powermenu
 
-class ShellApp(Application):
+class App(Application):
     def do_activate(self):
         self.hold()
 
         scss = os.path.expanduser("~/.config/astel-shell/index.scss")
         css = "/tmp/style.css"
         subprocess.run(["sass", scss, css])
-        self.init_css(css)
+        self.apply_css(css, False)
 
         display = Gdk.Display.get_default()
         for i in range(display.get_n_monitors()):

@@ -14,9 +14,9 @@ class Application(Gtk.Application):
 
         self._dbus_node_info = Gio.DBusNodeInfo.new_for_xml("""
             <node>
-                <interface name="com.github.btvtkh.Astel.Shell">
+                <interface name="com.github.btvtkh.Astel.Application">
                     <method name="ToggleWindow">
-                        <arg type="s" name="name" direction="in"/>
+                        <arg type="s" name="window_name" direction="in"/>
                     </method>
                     <method name="Quit"/>
                 </interface>
@@ -25,7 +25,7 @@ class Application(Gtk.Application):
 
         self.get_dbus_connection().register_object(
             "/com/github/btvtkh/Astel",
-            self._dbus_node_info.lookup_interface("com.github.btvtkh.Astel.Shell"),
+            self._dbus_node_info.lookup_interface("com.github.btvtkh.Astel.Application"),
             self._dbus_method_handler,
             None,
             None

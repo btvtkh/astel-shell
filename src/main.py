@@ -18,7 +18,7 @@ from ui.notifications import Notifications
 from ui.launcher import Launcher
 from ui.powermenu import Powermenu
 
-class App(Application):
+class ShellApp(Application):
     def do_activate(self):
         self.hold()
 
@@ -52,9 +52,9 @@ class App(Application):
         self.add_window(powermenu)
 
 if __name__ == "__main__":
-    app = App()
+    shell_app = ShellApp()
     GLib.set_prgname("Astel-Shell")
     try:
-        app.run()
+        shell_app.run()
     except KeyboardInterrupt:
-        app.quit()
+        shell_app.quit()

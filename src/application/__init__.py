@@ -4,6 +4,7 @@ class Application(Gtk.Application):
     def __init__(self):
         super().__init__(
             application_id = "com.github.btvtkh.Astel",
+            flags = Gio.ApplicationFlags.NON_UNIQUE
         )
 
         self._screen = Gdk.Screen.get_default()
@@ -12,7 +13,7 @@ class Application(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
-        self._dbus_node_info = Gio.DBusNodeInfo.new_for_xml("""
+        dbus_node_info = Gio.DBusNodeInfo.new_for_xml("""
             <node>
                 <interface name="com.github.btvtkh.Astel.Application">
                     <method name="ToggleWindow">
@@ -23,37 +24,56 @@ class Application(Gtk.Application):
             </node>
         """)
 
-        self.get_dbus_connection().register_object(
-            "/com/github/btvtkh/Astel",
-            self._dbus_node_info.lookup_interface("com.github.btvtkh.Astel.Application"),
-            self._dbus_method_handler,
-            None,
-            None
-        )
+        def dbus_method_handler(
+            connection,
+            sender,
+            object_path,
+            interface_name,
+            method_name,
+            parameters,
+            invocation
+        ):
+            try:
+                match method_name:
+                    case "ToggleWindow":
+                        window_name = parameters.unpack()[0]
+                        self.toggle_window(window_name)
+                    case "Quit":
+                        self.quit()
+            except Exception as e:
+                invocation.return_error_literal(
+                    Gio.dbus_error_quark(),
+                    Gio.DBusError.FAILED,
+                    str(e)
+                )
 
-    def _dbus_method_handler(
-        self,
-        connection,
-        sender,
-        object_path,
-        interface_name,
-        method_name,
-        parameters,
-        invocation
-    ):
-        try:
-            match method_name:
-                case "ToggleWindow":
-                    window_name = parameters.unpack()[0]
-                    self.toggle_window(window_name)
-                case "Quit":
-                    self.quit()
-        except Exception as e:
-            invocation.return_error_literal(
-                Gio.dbus_error_quark(),
-                Gio.DBusError.FAILED,
-                str(e)
-            )
+        def on_bus_acquired(connection, name):
+            try:
+                connection.register_object(
+                    "/com/github/btvtkh/Astel",
+                    dbus_node_info.lookup_interface("com.github.btvtkh.Astel.Application"),
+                    dbus_method_handler,
+                    None,
+                    None
+                )
+            except Exception as e:
+                print(e)
+
+        def on_name_acquired(connection, name):
+            pass
+
+        def on_name_lost(connection, name):
+            print("Another instance is already running. Exiting.")
+            self.quit()
+
+        Gio.bus_own_name(
+            Gio.BusType.SESSION,
+            "com.github.btvtkh.Astel",
+            Gio.BusNameOwnerFlags.NONE,
+            on_bus_acquired,
+            on_name_acquired,
+            on_name_lost
+        )
 
     def reset_css(self):
         for provider in self._css_providers:

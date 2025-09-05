@@ -24,17 +24,9 @@ class Application(Gtk.Application):
             </node>
         """)
 
-        def dbus_method_handler(
-            connection,
-            sender,
-            object_path,
-            interface_name,
-            method_name,
-            parameters,
-            invocation
-        ):
+        def dbus_method_handler(connection, sender, object_path, interface, method, parameters, invocation):
             try:
-                match method_name:
+                match method:
                     case "ToggleWindow":
                         window_name = parameters.unpack()[0]
                         self.toggle_window(window_name)
@@ -51,7 +43,9 @@ class Application(Gtk.Application):
             try:
                 connection.register_object(
                     "/com/github/btvtkh/Astel",
-                    dbus_node_info.lookup_interface("com.github.btvtkh.Astel.Application"),
+                    dbus_node_info.lookup_interface(
+                        "com.github.btvtkh.Astel.Application"
+                    ),
                     dbus_method_handler,
                     None,
                     None

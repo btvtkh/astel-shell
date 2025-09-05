@@ -1,4 +1,4 @@
-@use "../theme" as *;
+@use "theme" as *;
 
 .launcher-window {
   background-color: transparent;
@@ -9,9 +9,18 @@
     border: 1px solid $bg-urg;
     border-radius: 21px;
     padding: 8px;
+    margin-bottom: 4px;
+    margin-left: 4px;
 
     .search-entry {
       border-radius: 10px;
+      color: $fg;
+      background-color: transparent;
+      box-shadow: none;
+    }
+
+    separator {
+      background-color: $bg-urg;
     }
 
     .apps-scroll {

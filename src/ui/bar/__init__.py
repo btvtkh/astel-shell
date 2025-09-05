@@ -4,6 +4,7 @@ from .clients import ClientsWidget
 from .date_time import DateTimeWidget
 from .tray import TrayWidget
 from .kb_layout import KbLayoutWidget
+from .launcher_button import LauncherButtonWidget
 
 class Bar(Gtk.Window):
     def __init__(self, monitor):
@@ -14,7 +15,7 @@ class Bar(Gtk.Window):
         GtkLayerShell.set_monitor(self, monitor)
         GtkLayerShell.auto_exclusive_zone_enable(self)
         GtkLayerShell.set_layer(self, GtkLayerShell.Layer.TOP)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.TOP, True)
+        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.LEFT, True)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.RIGHT, True)
 
@@ -35,6 +36,7 @@ class Bar(Gtk.Window):
         self.get_style_context().add_class("bar-window")
         main_box.get_style_context().add_class("bar-box")
 
+        left_box.add(LauncherButtonWidget(self))
         left_box.add(WorkspacesWidget())
         left_box.add(ClientsWidget())
         right_box.add(TrayWidget())

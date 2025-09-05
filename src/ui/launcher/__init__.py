@@ -106,10 +106,8 @@ class Launcher(Gtk.Window):
             orientation = Gtk.Orientation.VERTICAL
         )
 
-        left_eventbox = Gtk.EventBox(hexpand = True)
         right_eventbox = Gtk.EventBox(hexpand = True)
         top_eventbox = Gtk.EventBox(vexpand = True)
-        bottom_eventbox = Gtk.EventBox(vexpand = True)
 
         main_box = Gtk.Box(
             orientation = Gtk.Orientation.VERTICAL
@@ -193,7 +191,10 @@ class Launcher(Gtk.Window):
         search_entry.connect("notify::text", on_search_text)
         self.connect("key-press-event", on_window_key_press)
         self.connect("notify::visible", on_visible)
-        for w in [left_eventbox, right_eventbox, top_eventbox, bottom_eventbox]:
+        for w in [
+            right_eventbox,
+            top_eventbox
+        ]:
             w.connect("button-press-event", on_evetbox_click)
 
         self.get_style_context().add_class("launcher-window")
@@ -203,11 +204,10 @@ class Launcher(Gtk.Window):
 
         apps_scroll.add(apps_box)
         main_box.add(search_entry)
+        main_box.add(Gtk.Separator(visible = True))
         main_box.add(apps_scroll)
         outside_vbox.add(top_eventbox)
         outside_vbox.add(main_box)
-        outside_vbox.add(bottom_eventbox)
-        outside_hbox.add(left_eventbox)
         outside_hbox.add(outside_vbox)
         outside_hbox.add(right_eventbox)
         self.add(outside_hbox)

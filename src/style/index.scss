@@ -1,7 +1,7 @@
-@use "bar/index" as *;
-@use "notifications/index" as *;
-@use "launcher/index" as *;
-@use "powermenu/index" as *;
+@use "bar" as *;
+@use "notifications" as *;
+@use "launcher" as *;
+@use "powermenu" as *;
 
 label {
   font-size: 11pt;

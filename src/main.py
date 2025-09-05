@@ -22,7 +22,7 @@ class ShellApp(Application):
     def do_activate(self):
         self.hold()
 
-        scss = os.path.expanduser("~/.config/astel-shell/index.scss")
+        scss = os.path.expanduser("~/.config/astel-shell/style/index.scss")
         css = "/tmp/style.css"
         subprocess.run(["sass", scss, css])
         self.apply_css(css, False)

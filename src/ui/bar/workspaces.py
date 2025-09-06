@@ -1,15 +1,8 @@
-from gi.repository import Gtk, AstalHyprland
+from gi.repository import AstalHyprland
+import widgets as Widgets
 
-class WorkspaceButton(Gtk.Button):
+class WorkspaceButton(Widgets.Button):
     def __init__(self, ws):
-        super().__init__(
-            visible = True,
-            child = Gtk.Label(
-                visible = True,
-                label = ws.get_name()
-            )
-        )
-
         hyprland = AstalHyprland.get_default()
 
         def on_focused_ws(*_):
@@ -22,22 +15,29 @@ class WorkspaceButton(Gtk.Button):
             if ws != hyprland.get_focused_workspace():
                 ws.focus()
 
-        on_focused_ws_id = hyprland.connect("notify::focused-workspace", on_focused_ws)
-        on_clicked_id = self.connect("clicked", on_clicked)
+        def on_button_setup(self):
+            on_focused_ws_id = hyprland.connect("notify::focused-workspace", on_focused_ws)
+            on_clicked_id = self.connect("clicked", on_clicked)
 
-        def on_destroy(*_):
-            hyprland.disconnect(on_focused_ws_id)
-            self.disconnect(on_clicked_id)
+            def on_destroy(*_):
+                hyprland.disconnect(on_focused_ws_id)
+                self.disconnect(on_clicked_id)
 
-        self.connect("destroy", on_destroy)
+            self.connect("destroy", on_destroy)
 
-        self.get_style_context().add_class("workspace-button")
-        self.get_style_context().add_class(ws == hyprland.get_focused_workspace() and "focused" or "")
+        super().__init__(
+            css_classes = [
+                "workspace-button",
+                ws == hyprland.get_focused_workspace() and "focused" or ""
+            ],
+            setup = on_button_setup,
+            child = Widgets.Label(
+                label = ws.get_name()
+            )
+        )
 
-class WorkspacesWidget(Gtk.Box):
+class WorkspacesWidget(Widgets.Box):
     def __init__(self):
-        super().__init__(visible = True)
-
         hyprland = AstalHyprland.get_default()
 
         def on_workspaces(*_):
@@ -49,15 +49,13 @@ class WorkspacesWidget(Gtk.Box):
             for ws in wss:
                 if not (ws.get_id() >= -99 and ws.get_id() <= -2):
                     self.add(WorkspaceButton(ws))
-            del wss
 
-        hyprland.connect("notify::workspaces", on_workspaces)
+        def on_box_setup(*_):
+            hyprland.connect("notify::workspaces", on_workspaces)
 
-        self.get_style_context().add_class("workspaces-box")
+        super().__init__(
+            css_classes = ["workspaces-box"],
+            setup = on_box_setup
+        )
 
-        wss = hyprland.get_workspaces()
-        wss.sort(key = lambda x: x.get_id())
-        for ws in wss:
-            if not (ws.get_id() >= -99 and ws.get_id() <= -2):
-                self.add(WorkspaceButton(ws))
-        del wss
+        on_workspaces()

@@ -1,8 +1,10 @@
 import re
 from gi.repository import Gio, Gdk, Gtk, GtkLayerShell, Pango, AstalHyprland
+import widgets as Widgets
+from .sidebar import SidebarWidget
 
 def launch_app(app):
-    desktop = Gio.DesktopAppInfo.new(Gio.AppInfo.get_id(app))
+    desktop = Gio.DesktopAppInfo.new(app.get_id())
     term = desktop.get_string("Terminal") == "true" and Gio.AppInfo.get_default_for_uri_scheme('terminal') or False
 
     AstalHyprland.get_default().dispatch("exec", f"{
@@ -38,30 +40,8 @@ def filter_apps(apps, query):
     del filtered_any
     return filtered
 
-class AppButton(Gtk.Button):
+class AppButton(Widgets.Button):
     def __init__(self, window, app):
-        super().__init__(
-            child = Gtk.Box(
-                orientation = Gtk.Orientation.VERTICAL
-            )
-        )
-
-        name_label = Gtk.Label(
-            halign = Gtk.Align.START,
-            xalign = 0,
-            ellipsize = Pango.EllipsizeMode.END,
-            max_width_chars = 45,
-            label = app.get_name()
-        )
-
-        description_label = Gtk.Label(
-            halign = Gtk.Align.START,
-            xalign = 0,
-            ellipsize = Pango.EllipsizeMode.END,
-            max_width_chars = 45,
-            label = app.get_description()
-        )
-
         def on_clicked(*_):
             window.hide()
             launch_app(app)
@@ -70,60 +50,58 @@ class AppButton(Gtk.Button):
              if event.keyval == Gdk.KEY_Return:
                 on_clicked()
 
-        on_clicked_id = self.connect("clicked", on_clicked)
-        on_key_press_id = self.connect("key-press-event", on_key_press)
+        def on_button_setup(self):
+            on_clicked_id = self.connect("clicked", on_clicked)
+            on_key_press_id = self.connect("key-press-event", on_key_press)
 
-        def on_destroy(*_):
-            self.disconnect(on_clicked_id)
-            self.disconnect(on_key_press_id)
+            def on_destroy(*_):
+                self.disconnect(on_clicked_id)
+                self.disconnect(on_key_press_id)
 
-        self.connect("destroy", on_destroy)
+            self.connect("destroy", on_destroy)
 
-        name_label.get_style_context().add_class("name-label")
-        description_label.get_style_context().add_class("description-label")
+        super().__init__(
+            css_classes = ["app-button"],
+            setup = on_button_setup,
+            child = Widgets.Box(
+                orientation = Gtk.Orientation.VERTICAL,
+                children = [
+                    Widgets.Label(
+                        css_classes = ["name-label"],
+                        halign = Gtk.Align.START,
+                        xalign = 0,
+                        ellipsize = Pango.EllipsizeMode.END,
+                        max_width_chars = 45,
+                        label = app.get_name()
+                    ),
+                    Widgets.Label(
+                        css_classes = ["description-label"],
+                        halign = Gtk.Align.START,
+                        xalign = 0,
+                        ellipsize = Pango.EllipsizeMode.END,
+                        max_width_chars = 45,
+                        label = app.get_description()
+                    )
+                ]
+            )
+        )
 
-        self.get_style_context().add_class("app-button")
-        self.get_child().add(name_label)
-        self.get_child().add(description_label)
-
-class Launcher(Gtk.Window):
+class Launcher(Widgets.Window):
     def __init__(self):
-        super().__init__()
-        self.set_name("Launcher")
-        GtkLayerShell.init_for_window(self)
-        GtkLayerShell.set_namespace(self, "Astal-Launcher")
-        GtkLayerShell.set_layer(self, GtkLayerShell.Layer.TOP)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.TOP, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.LEFT, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.RIGHT, True)
-        GtkLayerShell.set_keyboard_mode(self, GtkLayerShell.KeyboardMode.ON_DEMAND)
-
-        outside_hbox = Gtk.Box()
-
-        outside_vbox = Gtk.Box(
-            hexpand = False,
-            orientation = Gtk.Orientation.VERTICAL
-        )
-
-        right_eventbox = Gtk.EventBox(hexpand = True)
-        top_eventbox = Gtk.EventBox(vexpand = True)
-
-        main_box = Gtk.Box(
-            orientation = Gtk.Orientation.VERTICAL
-        )
-
-        apps_box = Gtk.Box(
-            orientation = Gtk.Orientation.VERTICAL
-        )
-
-        apps_scroll = Gtk.ScrolledWindow(
-            hexpand = False,
-            vexpand = False
-        )
-
-        search_entry = Gtk.Entry(
+        search_entry = Widgets.Entry(
+            css_classes = ["search-entry"],
             placeholder_text = "Search..."
+        )
+
+        apps_box = Widgets.Box(
+            orientation = Gtk.Orientation.VERTICAL
+        )
+
+        apps_scrolled_window = Widgets.ScrolledWindow(
+            css_classes = ["apps-scrolled-window"],
+            hexpand = False,
+            vexpand = False,
+            child = apps_box
         )
 
         def on_window_key_press(self, event):
@@ -134,80 +112,105 @@ class Launcher(Gtk.Window):
             self.hide()
 
         def on_visible(*_):
-            if apps_box.get_children():
-                for child in apps_box.get_children():
-                    child.destroy()
-
             if self.get_visible():
                 search_entry.set_text("")
                 search_entry.set_position(-1)
                 search_entry.select_region(0, -1)
                 search_entry.grab_focus()
-                apps_scroll.get_vadjustment().set_value(
-                    apps_scroll.get_vadjustment().get_lower()
+                apps_scrolled_window.get_vadjustment().set_value(
+                    apps_scrolled_window.get_vadjustment().get_lower()
                 )
 
                 if not apps_box.get_children():
-                    for app in filter_apps(Gio.AppInfo.get_all(), ""):
-                        apps_box.add(AppButton(self, app))
+                    apps_box.set_children([
+                        AppButton(self, app) for app in filter_apps(Gio.AppInfo.get_all(), "")
+                    ])
 
                 self.show_all()
 
         def on_search_text(*_):
-            if apps_box.get_children():
-                for child in apps_box.get_children():
-                    child.destroy()
-
             apps_list = filter_apps(Gio.AppInfo.get_all(), search_entry.get_text())
 
             if len(apps_list) > 0:
-                for app in apps_list:
-                    apps_box.add(AppButton(self, app))
+                apps_box.set_children([AppButton(self, app) for app in apps_list])
             else:
-                no_match_box = Gtk.Box(
-                    halign = Gtk.Align.CENTER,
-                    valign = Gtk.Align.CENTER,
-                    hexpand = True,
-                    vexpand = True
-                )
-
-                no_match_label = Gtk.Label(
-                    label = "No match found"
-                )
-
-                no_match_label.get_style_context().add_class("no-match-label")
-                no_match_box.add(no_match_label)
-                apps_box.add(no_match_box)
+                apps_box.set_children([
+                    Widgets.Box(
+                        halign = Gtk.Align.CENTER,
+                        valign = Gtk.Align.CENTER,
+                        hexpand = True,
+                        vexpand = True,
+                        children = [
+                            Widgets.Label(
+                                css_classes = ["no-match-label"],
+                                label = "No match found"
+                            )
+                        ]
+                    )
+                ])
 
             apps_box.show_all()
-            del apps_list
 
         def on_search_activate(*_):
             if apps_box.get_children():
                 if isinstance(apps_box.get_children()[0], Gtk.Button):
                     apps_box.get_children()[0].clicked()
 
-        search_entry.connect("activate", on_search_activate)
-        search_entry.connect("notify::text", on_search_text)
-        self.connect("key-press-event", on_window_key_press)
-        self.connect("notify::visible", on_visible)
-        for w in [
-            right_eventbox,
-            top_eventbox
-        ]:
-            w.connect("button-press-event", on_evetbox_click)
+        def on_window_setup(self):
+            search_entry.connect("activate", on_search_activate)
+            search_entry.connect("notify::text", on_search_text)
+            self.connect("key-press-event", on_window_key_press)
+            self.connect("notify::visible", on_visible)
 
-        self.get_style_context().add_class("launcher-window")
-        main_box.get_style_context().add_class("launcher-box")
-        apps_scroll.get_style_context().add_class("apps-scroll")
-        search_entry.get_style_context().add_class("search-entry")
-
-        apps_scroll.add(apps_box)
-        main_box.add(search_entry)
-        main_box.add(Gtk.Separator(visible = True))
-        main_box.add(apps_scroll)
-        outside_vbox.add(top_eventbox)
-        outside_vbox.add(main_box)
-        outside_hbox.add(outside_vbox)
-        outside_hbox.add(right_eventbox)
-        self.add(outside_hbox)
+        super().__init__(
+            name = "Launcher",
+            namespace = "Astel-Launcher",
+            layer = GtkLayerShell.Layer.TOP,
+            anchors = [
+                GtkLayerShell.Edge.TOP,
+                GtkLayerShell.Edge.BOTTOM,
+                GtkLayerShell.Edge.RIGHT,
+                GtkLayerShell.Edge.LEFT
+            ],
+            keyboard_mode = GtkLayerShell.KeyboardMode.ON_DEMAND,
+            setup = on_window_setup,
+            css_classes = ["launcher-window"],
+            child = Widgets.Box(
+                children = [
+                    Widgets.Box(
+                        hexpand = False,
+                        orientation = Gtk.Orientation.VERTICAL,
+                        children = [
+                            Widgets.EventBox(
+                                vexpand = True,
+                                setup = lambda w: w.connect(
+                                    "button-press-event",
+                                    on_evetbox_click
+                                )
+                            ),
+                            Widgets.Box(
+                                css_classes = ["launcher-box"],
+                                children = [
+                                    SidebarWidget(self),
+                                    Widgets.Box(
+                                        orientation = Gtk.Orientation.VERTICAL,
+                                        children = [
+                                            search_entry,
+                                            Widgets.Separator(),
+                                            apps_scrolled_window
+                                        ]
+                                    )
+                                ]
+                            )
+                        ]
+                    ),
+                    Widgets.EventBox(
+                        hexpand = True,
+                        setup = lambda w: w.connect(
+                            "button-press-event",
+                            on_evetbox_click
+                        )
+                    )
+                ]
+            )
+        )

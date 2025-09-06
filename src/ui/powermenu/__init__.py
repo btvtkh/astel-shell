@@ -5,7 +5,7 @@ class Powermenu(Gtk.Window):
         super().__init__()
         self.set_name("Powermenu")
         GtkLayerShell.init_for_window(self)
-        GtkLayerShell.set_namespace(self, "Astal-Powermenu")
+        GtkLayerShell.set_namespace(self, "Astel-Powermenu")
         GtkLayerShell.set_layer(self, GtkLayerShell.Layer.TOP)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.TOP, True)

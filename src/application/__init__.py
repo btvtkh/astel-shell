@@ -2,7 +2,8 @@ from gi.repository import Gio, Gdk, Gtk
 
 class Application(Gtk.Application):
     def __init__(self):
-        super().__init__(
+        Gtk.Application.__init__(
+            self,
             application_id = "com.github.btvtkh.Astel",
             flags = Gio.ApplicationFlags.NON_UNIQUE
         )

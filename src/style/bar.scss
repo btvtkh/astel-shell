@@ -10,7 +10,6 @@
 
   #launcher-button {
     all: unset;
-    transition: 200ms;
     margin: 6px 0 6px 6px;
     border-radius: 10px;
     color: $fg;
@@ -30,7 +29,6 @@
 
     #workspace-button {
       all: unset;
-      transition: 200ms;
       min-width: 25px;
       margin-left: 2px;
       border-radius: 6px;
@@ -57,7 +55,6 @@
 
     #client-button {
       all: unset;
-      transition: 200ms;
       margin-left: 3px;
       border-radius: 10px;
       padding: 0 10px;
@@ -88,7 +85,6 @@
 
     #reveal-button {
       all: unset;
-      transition: 200ms;
       color: $fg;
       border-radius: 6px;
       padding: 0 4px;
@@ -100,7 +96,6 @@
 
     #item-menu-button {
       all: unset;
-      transition: 200ms;
       color: $fg;
       border-radius: 6px;
       margin: 0 0 0 2px;

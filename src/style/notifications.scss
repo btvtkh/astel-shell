@@ -1,9 +1,9 @@
 @use "theme" as *;
 
-.notifications-window {
+#Notifications {
   background-color: transparent;
 
-  .notification-box {
+  #notification-box {
     min-width: 350px;
     background-color: $bg;
     margin-top: 15px;
@@ -13,20 +13,20 @@
     border-radius: 18px;
     color: $fg;
 
-    .header-box {
+    #header-box {
       margin: 5px 5px 0 5px;
 
-      .app-name-label {
+      #app-name-label {
         font-size: 11pt;
         font-weight: bold;
       }
 
-      .time-label {
+      #time-label {
         font-size: 10pt;
         color: $fg-alt;
       }
 
-      .close-button {
+      #close-button {
         all: unset;
         transition: 200ms;
         margin-left: 5px;
@@ -45,32 +45,28 @@
       margin-top: 5px;
     }
 
-    .content-box {
+    #body-box {
       margin: 5px 5px 0 5px;
 
       &:last-child {
         margin: 5px;
       }
 
-      .icon-image {
-        margin-right: 10px;
-      }
-
-      .summary-label {
+      #summary-label {
         font-size: 13pt;
         font-weight: bold;
       }
 
-      .body-label {
+      #body-label {
         font-size: 10pt;
         margin-top: 3px;
       }
     }
 
-    .actions-box {
+    #actions-box {
       margin-top: 7px;
 
-      .action-button {
+      #action-button {
         margin-left: 3px;
         border-radius: 10px;
 

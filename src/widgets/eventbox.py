@@ -9,8 +9,4 @@ class EventBox(Gtk.EventBox, Base):
         **kwargs
     ):
         Gtk.EventBox.__init__(self, **kwargs)
-        Base.__init__(
-            self,
-            css_classes = css_classes,
-            setup = setup
-        )
+        Base.__init__(self, css_classes = css_classes, setup = setup)

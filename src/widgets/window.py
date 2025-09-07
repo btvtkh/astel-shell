@@ -1,4 +1,4 @@
-from gi.repository import Gtk, GtkLayerShell
+from gi.repository import Gtk, Gdk, GtkLayerShell
 from .base import Base
 
 GTK_LAYER_SHELL_EDGES = [
@@ -32,44 +32,39 @@ class Window(Gtk.Window, Base):
         )
 
         GtkLayerShell.init_for_window(self)
-
-        Base.__init__(
-            self,
-            css_classes = css_classes,
-            setup = setup
-        )
-
         self.set_namespace(namespace)
         self.set_monitor(monitor)
         self.set_auto_exclusive_zone(auto_exclusive_zone)
         self.set_layer(layer)
         self.set_anchors(anchors)
         self.set_keyboard_mode(keyboard_mode)
+
+        Base.__init__(self, css_classes = css_classes, setup = setup)
         self.set_visible(visible)
 
     def set_namespace(self, namespace):
-        if namespace is not None and namespace != "":
+        if isinstance(namespace, str) and namespace != "":
             GtkLayerShell.set_namespace(self, namespace)
 
     def get_namespace(self):
         return GtkLayerShell.get_namespace(self)
 
     def set_monitor(self, monitor):
-        if monitor != None:
+        if isinstance(monitor, Gdk.Monitor):
             GtkLayerShell.set_monitor(self, monitor)
 
     def get_monitor(self):
         return GtkLayerShell.get_monitor(self)
 
     def set_auto_exclusive_zone(self, auto_exclusive_zone):
-        if auto_exclusive_zone:
+        if isinstance(auto_exclusive_zone, bool):
             GtkLayerShell.auto_exclusive_zone_enable(self)
 
     def get_auto_exclusive_zone(self):
         return GtkLayerShell.auto_exclusive_zone_is_enabled(self)
 
     def set_layer(self, layer):
-        if layer != None:
+        if isinstance(layer, GtkLayerShell.Layer):
             GtkLayerShell.set_layer(self, layer)
 
     def get_layer(self):
@@ -77,6 +72,8 @@ class Window(Gtk.Window, Base):
 
     def set_anchors(self, edges):
         for edge in edges:
+            if not isinstance(edge, GtkLayerShell.Edge):
+                return
             if edge in GTK_LAYER_SHELL_EDGES:
                 GtkLayerShell.set_anchor(self, edge, True)
             else:
@@ -90,7 +87,7 @@ class Window(Gtk.Window, Base):
         return ret
 
     def set_keyboard_mode(self, keyboard_mode):
-        if keyboard_mode is not None:
+        if isinstance(keyboard_mode, GtkLayerShell.KeyboardMode):
             GtkLayerShell.set_keyboard_mode(self, keyboard_mode)
 
     def get_keyboard_mode(self):

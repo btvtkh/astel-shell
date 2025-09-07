@@ -10,7 +10,6 @@ from .launcher_button import LauncherButtonWidget
 class Bar(Widgets.Window):
     def __init__(self, monitor):
         super().__init__(
-            visible = True,
             name = "Bar",
             namespace = "Astel-Bar",
             monitor = monitor,
@@ -21,9 +20,9 @@ class Bar(Widgets.Window):
                 GtkLayerShell.Edge.LEFT,
                 GtkLayerShell.Edge.RIGHT
             ],
-            css_classes = ["bar-window"],
+            visible = True,
             child = Widgets.Box(
-                css_classes = ["bar-box"],
+                name = "main-box",
                 children = [
                     Widgets.Box(
                         hexpand = True,

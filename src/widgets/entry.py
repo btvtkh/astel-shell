@@ -9,8 +9,4 @@ class Entry(Gtk.Entry, Base):
         **kwargs
     ):
         Gtk.Entry.__init__(self, **kwargs)
-        Base.__init__(
-            self,
-            css_classes = css_classes,
-            setup = setup
-        )
+        Base.__init__(self, css_classes = css_classes, setup = setup)

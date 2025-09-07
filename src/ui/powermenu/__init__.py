@@ -1,119 +1,124 @@
 from gi.repository import Gdk, Gtk, GtkLayerShell, AstalHyprland
+import widgets as Widget
 
-class Powermenu(Gtk.Window):
+class Powermenu(Widget.Window):
     def __init__(self):
-        super().__init__()
-        self.set_name("Powermenu")
-        GtkLayerShell.init_for_window(self)
-        GtkLayerShell.set_namespace(self, "Astel-Powermenu")
-        GtkLayerShell.set_layer(self, GtkLayerShell.Layer.TOP)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.TOP, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.LEFT, True)
-        GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.RIGHT, True)
-        GtkLayerShell.set_keyboard_mode(self, GtkLayerShell.KeyboardMode.ON_DEMAND)
+        def on_setup(self):
+            hyprland = AstalHyprland.get_default()
+            power_button = Widget.get_children_by_name(self, "power-button")[0]
+            reboot_button = Widget.get_children_by_name(self, "reboot-button")[0]
+            exit_button = Widget.get_children_by_name(self, "exit-button")[0]
 
-        hyprland = AstalHyprland.get_default()
-
-        outside_hbox = Gtk.Box(visible = True)
-
-        outside_vbox = Gtk.Box(
-            visible = True,
-            hexpand = False,
-            orientation = Gtk.Orientation.VERTICAL
-        )
-
-        left_eventbox = Gtk.EventBox(hexpand = True, visible = True)
-        right_eventbox = Gtk.EventBox(hexpand = True, visible = True)
-        top_eventbox = Gtk.EventBox(vexpand = True, visible = True)
-        bottom_eventbox = Gtk.EventBox(vexpand = True, visible = True)
-
-        main_box = Gtk.Box(visible = True)
-
-        power_button = Gtk.Button(
-            visible = True,
-            child = Gtk.Image(
-                visible = True,
-                icon_name = "system-shutdown-symbolic",
-                pixel_size = 32
-            )
-        )
-
-        reboot_button = Gtk.Button(
-            visible = True,
-            child = Gtk.Image(
-                visible = True,
-                icon_name = "system-reboot-symbolic",
-                pixel_size = 32
-            )
-        )
-
-        exit_button = Gtk.Button(
-            visible = True,
-            child = Gtk.Image(
-                visible = True,
-                icon_name = "system-log-out-symbolic",
-                pixel_size = 32
-            )
-        )
-
-        def on_window_key_press(self, event):
-            if event.keyval == Gdk.KEY_Escape:
+            def on_outside_click(*_):
                 self.hide()
 
-        def on_evetbox_click(*_):
-            self.hide()
+            def on_power_button_clicked(*_):
+                self.hide()
+                hyprland.dispatch("exec", "poweroff")
 
-        def on_visible(*_):
-            if self.get_visible():
-                main_box.get_children()[0].grab_focus()
+            def on_power_button_key_press(x, event):
+                 if event.keyval == Gdk.KEY_Return:
+                    on_power_button_clicked()
 
-        def on_power_button_clicked(*_):
-            self.hide()
-            hyprland.dispatch("exec", "poweroff")
+            def on_reboot_button_clicked(*_):
+                self.hide()
+                hyprland.dispatch("exec", "reboot")
 
-        def on_power_button_key_press(x, event):
-             if event.keyval == Gdk.KEY_Return:
-                on_power_button_clicked()
+            def on_reboot_button_key_press(x, event):
+                 if event.keyval == Gdk.KEY_Return:
+                    on_reboot_button_clicked()
 
-        def on_reboot_button_clicked(*_):
-            self.hide()
-            hyprland.dispatch("exec", "reboot")
+            def on_exit_button_clicked(*_):
+                self.hide()
+                hyprland.dispatch("exit", "")
 
-        def on_reboot_button_key_press(x, event):
-             if event.keyval == Gdk.KEY_Return:
-                on_reboot_button_clicked()
+            def on_exit_button_key_press(x, event):
+                 if event.keyval == Gdk.KEY_Return:
+                    on_exit_button_clicked()
 
-        def on_exit_button_clicked(*_):
-            self.hide()
-            hyprland.dispatch("exit", "")
+            def on_visible(*_):
+                if self.get_visible():
+                    power_button.grab_focus()
 
-        def on_exit_button_key_press(x, event):
-             if event.keyval == Gdk.KEY_Return:
-                on_exit_button_clicked()
+            def on_key_press(x, event):
+                if event.keyval == Gdk.KEY_Escape:
+                    self.hide()
 
-        power_button.connect("clicked", on_power_button_clicked)
-        power_button.connect("key-press-event", on_power_button_key_press)
-        reboot_button.connect("clicked", on_reboot_button_clicked)
-        reboot_button.connect("key-press-event", on_reboot_button_key_press)
-        exit_button.connect("clicked", on_exit_button_clicked)
-        exit_button.connect("key-press-event", on_exit_button_key_press)
-        self.connect("key-press-event", on_window_key_press)
-        self.connect("notify::visible", on_visible)
-        for w in [left_eventbox, right_eventbox, top_eventbox, bottom_eventbox]:
-            w.connect("button-press-event", on_evetbox_click)
+            power_button.connect("clicked", on_power_button_clicked)
+            power_button.connect("key-press-event", on_power_button_key_press)
+            reboot_button.connect("clicked", on_reboot_button_clicked)
+            reboot_button.connect("key-press-event", on_reboot_button_key_press)
+            exit_button.connect("clicked", on_exit_button_clicked)
+            exit_button.connect("key-press-event", on_exit_button_key_press)
+            self.connect("key-press-event", on_key_press)
+            self.connect("notify::visible", on_visible)
 
-        self.get_style_context().add_class("powermenu-window")
-        main_box.get_style_context().add_class("powermenu-box")
+            for i in Widget.get_children_by_name(self, "outside-eventbox"):
+                i.connect("button-press-event", on_outside_click)
 
-        main_box.add(power_button)
-        main_box.add(reboot_button)
-        main_box.add(exit_button)
-        outside_vbox.add(top_eventbox)
-        outside_vbox.add(main_box)
-        outside_vbox.add(bottom_eventbox)
-        outside_hbox.add(left_eventbox)
-        outside_hbox.add(outside_vbox)
-        outside_hbox.add(right_eventbox)
-        self.add(outside_hbox)
+        super().__init__(
+            name = "Powermenu",
+            namespace = "Astel-Powermenu",
+            layer = GtkLayerShell.Layer.TOP,
+            anchors = [
+                GtkLayerShell.Edge.TOP,
+                GtkLayerShell.Edge.BOTTOM,
+                GtkLayerShell.Edge.LEFT,
+                GtkLayerShell.Edge.RIGHT
+            ],
+            keyboard_mode = GtkLayerShell.KeyboardMode.ON_DEMAND,
+            setup = on_setup,
+            child = Widget.Box(
+                children = [
+                    Widget.EventBox(
+                        name = "outside-eventbox",
+                        hexpand = True
+                    ),
+                    Widget.Box(
+                        orientation = Gtk.Orientation.VERTICAL,
+                        hexpand = False,
+                        children = [
+                            Widget.EventBox(
+                                name = "outside-eventbox",
+                                vexpand = True
+                            ),
+                            Widget.Box(
+                                name = "main-box",
+                                children = [
+                                    Widget.Button(
+                                        name = "power-button",
+                                        child = Widget.Image(
+                                            icon_name = "system-shutdown-symbolic",
+                                            pixel_size = 32
+                                        )
+                                    ),
+                                    Widget.Button(
+                                        name = "reboot-button",
+                                        child = Widget.Image(
+                                            icon_name = "system-reboot-symbolic",
+                                            pixel_size = 32
+                                        )
+                                    ),
+                                    Widget.Button(
+                                        name = "exit-button",
+                                        child = Widget.Image(
+                                            icon_name = "system-log-out-symbolic",
+                                            pixel_size = 32
+                                        )
+                                    )
+                                ]
+                            ),
+                            Widget.EventBox(
+                                name = "outside-eventbox",
+                                vexpand = True
+                            )
+                        ]
+                    ),
+                    Widget.EventBox(
+                        name = "outside-eventbox",
+                        hexpand = True
+                    )
+                ]
+            )
+        )
 

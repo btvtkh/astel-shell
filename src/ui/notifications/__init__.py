@@ -1,68 +1,113 @@
 from gi.repository import GLib, Gtk, GtkLayerShell, AstalNotifd
-import widgets as Widgets
+import widgets as Widget
 from .notification import NotificationWidget
 
-class NotificationPopup(Gtk.Box):
+class NotificationPopup(Widget.Box):
     def __init__(self, window, n):
-        super().__init__(
-            halign = Gtk.Align.END,
-        )
+        def on_setup(self):
+            outer_revealer = Widget.get_children_by_name(self, "outer-revealer")[0]
+            inner_revealer = Widget.get_children_by_name(self, "inner-revealer")[0]
 
-        outer = Gtk.Revealer(
-            transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN
-        )
+            def on_resolved(*_):
+                def on_outer_timeout_end():
+                    self.destroy()
+                    if window.get_visible() and not window.get_child().get_children():
+                        window.hide()
+                    return GLib.SOURCE_REMOVE
 
-        inner = Gtk.Revealer(
-            transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT
-        )
+                def on_inner_timeout_end():
+                    outer_revealer.set_reveal_child(False)
+                    GLib.timeout_add(
+                        priority = GLib.PRIORITY_DEFAULT,
+                        interval = outer_revealer.get_transition_duration(),
+                        function = on_outer_timeout_end
+                    )
+                    return GLib.SOURCE_REMOVE
 
-        def on_resolved(*_):
-            def on_outer_timeout_end():
-                self.destroy()
-                if window.get_visible() and not window.get_child().get_children():
-                    window.hide()
-                return GLib.SOURCE_REMOVE
-
-            def on_inner_timeout_end():
-                outer.set_reveal_child(False)
+                inner_revealer.set_reveal_child(False)
                 GLib.timeout_add(
                     priority = GLib.PRIORITY_DEFAULT,
-                    interval = outer.get_transition_duration(),
-                    function = on_outer_timeout_end
+                    interval = inner_revealer.get_transition_duration(),
+                    function = on_inner_timeout_end
                 )
+
+            on_resolved_id = n.connect("resolved", on_resolved)
+
+            def on_destroy(*_):
+                n.disconnect(on_resolved_id)
+
+            self.connect("destroy", on_destroy)
+
+            def on_display_timeout_end():
+                #on_resolved()
+                n.dismiss()
                 return GLib.SOURCE_REMOVE
 
-            inner.set_reveal_child(False)
-            GLib.timeout_add(
+            GLib.timeout_add_seconds(
                 priority = GLib.PRIORITY_DEFAULT,
-                interval = inner.get_transition_duration(),
-                function = on_inner_timeout_end
+                interval = 5,
+                function = on_display_timeout_end
             )
 
-        on_resolved_id = n.connect("resolved", on_resolved)
-
-        def on_destroy(*_):
-            n.disconnect(on_resolved_id)
-
-        self.connect("destroy", on_destroy)
-
-        inner.add(NotificationWidget(n))
-        outer.add(inner)
-        self.add(outer)
-
-        def on_display_timeout_end():
-            #on_resolved()
-            n.dismiss()
-            return GLib.SOURCE_REMOVE
-
-        GLib.timeout_add_seconds(
-            priority = GLib.PRIORITY_DEFAULT,
-            interval = 5,
-            function = on_display_timeout_end
+        super().__init__(
+            halign = Gtk.Align.END,
+            setup = on_setup,
+            children = [
+                Widget.Revealer(
+                    name = "outer-revealer",
+                    transition_type = Gtk.RevealerTransitionType.SLIDE_DOWN,
+                    child = Widget.Revealer(
+                        name = "inner-revealer",
+                        transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT,
+                        child = NotificationWidget(n)
+                    )
+                )
+            ]
         )
 
-class Notifications(Widgets.Window):
+class Notifications(Widget.Window):
     def __init__(self):
+        def on_setup(self):
+            notifd = AstalNotifd.get_default()
+            main_box = Widget.get_children_by_name(self, "main-box")[0]
+
+            def on_notified(x, id, replaced):
+                n = notifd.get_notification(id)
+                notification_popup = NotificationPopup(self, n)
+                outer_revealer = Widget.get_children_by_name(notification_popup, "outer-revealer")[0]
+                inner_revealer = Widget.get_children_by_name(notification_popup, "inner-revealer")[0]
+
+                def on_outer_timeout_end():
+                    inner_revealer.set_reveal_child(True)
+                    return GLib.SOURCE_REMOVE
+
+                if not self.get_visible():
+                    self.show()
+
+                main_box.pack_end(notification_popup, False, False, 0)
+                notification_popup.show_all()
+                outer_revealer.set_reveal_child(True)
+
+                GLib.timeout_add(
+                    priority = GLib.PRIORITY_DEFAULT,
+                    interval = outer_revealer.get_transition_duration(),
+                    function = on_outer_timeout_end
+                )
+
+            notifd.connect("notified", on_notified)
+
+            ns = notifd.get_notifications()
+            ns.sort(key = lambda x: x.get_id())
+            for n in ns:
+                notification_popup = NotificationPopup(self, n)
+                outer_revealer = Widget.get_children_by_name(notification_popup, "outer-revealer")[0]
+                inner_revealer = Widget.get_children_by_name(notification_popup, "inner-revealer")[0]
+                main_box.pack_end(notification_popup, False, False, 0)
+                inner_revealer.set_reveal_child(True)
+                outer_revealer.set_reveal_child(True)
+
+            self.show_all()
+
         super().__init__(
             name = "Notifications",
             namespace = "Astel-Notifications",
@@ -71,52 +116,11 @@ class Notifications(Widgets.Window):
             anchors = [
                 GtkLayerShell.Edge.TOP,
                 GtkLayerShell.Edge.RIGHT
-            ]
-        )
-
-        notifd = AstalNotifd.get_default()
-
-        notifications_box = Gtk.Box(
-            orientation = Gtk.Orientation.VERTICAL,
-            valign = Gtk.Align.START,
-        )
-
-        def on_notified(x, id, replaced):
-            n = notifd.get_notification(id)
-            popup = NotificationPopup(self, n)
-            outer = popup.get_children()[0]
-            inner = outer.get_child()
-
-            def on_outer_timeout_end():
-                inner.set_reveal_child(True)
-                return GLib.SOURCE_REMOVE
-
-            if not self.get_visible():
-                self.show()
-
-            notifications_box.pack_end(popup, False, False, 0)
-            popup.show_all()
-            outer.set_reveal_child(True)
-
-            GLib.timeout_add(
-                priority = GLib.PRIORITY_DEFAULT,
-                interval = outer.get_transition_duration(),
-                function = on_outer_timeout_end
+            ],
+            setup = on_setup,
+            child = Widget.Box(
+                name = "main-box",
+                orientation = Gtk.Orientation.VERTICAL,
+                valign = Gtk.Align.START
             )
-
-        notifd.connect("notified", on_notified)
-
-        self.get_style_context().add_class("notifications-window")
-
-        self.add(notifications_box)
-        ns = notifd.get_notifications()
-        ns.sort(key = lambda x: x.get_id())
-        for n in ns:
-            popup = NotificationPopup(self, n)
-            outer = popup.get_children()[0]
-            inner = outer.get_child()
-            notifications_box.pack_end(popup, False, False, 0)
-            inner.set_reveal_child(True)
-            outer.set_reveal_child(True)
-
-        self.show_all()
+        )

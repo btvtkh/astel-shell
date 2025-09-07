@@ -1,21 +1,24 @@
-from gi.repository import Gtk, AstalHyprland
+from gi.repository import AstalHyprland
+import widgets as Widget
 
-class KbLayoutWidget(Gtk.Box):
+class KbLayoutWidget(Widget.Box):
     def __init__(self):
-        super().__init__(visible = True)
+        def on_setup(self):
+            hyprland = AstalHyprland.get_default()
+            kb_label = Widget.get_children_by_name(self, "kb-label")[0]
 
-        hyprland = AstalHyprland.get_default()
+            def on_keyboard_layout(x, kb, lt):
+                kb_label.set_label(lt[:2])
 
-        kb_label = Gtk.Label(
-            visible = True,
-            label = "En"
+            hyprland.connect("keyboard-layout", on_keyboard_layout)
+
+        super().__init__(
+            name = "kb-layout-box",
+            setup = on_setup,
+            children = [
+                Widget.Label(
+                    name = "kb-label",
+                    label = "En"
+                )
+            ]
         )
-
-        def on_keyboard_layout(x, kb, lt):
-            kb_label.set_label(lt[:2])
-
-        hyprland.connect("keyboard-layout", on_keyboard_layout)
-
-        self.get_style_context().add_class("kb-layout-box")
-
-        self.add(kb_label)

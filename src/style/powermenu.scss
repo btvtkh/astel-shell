@@ -1,9 +1,9 @@
 @use "theme" as *;
 
-.powermenu-window {
+#Powermenu {
   background-color: transparent;
 
-  .powermenu-box {
+  #main-box {
     color: $fg;
     background-color: $bg;
     border: 1px solid $bg-urg;

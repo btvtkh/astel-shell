@@ -10,17 +10,14 @@ class Box(Gtk.Box, Base):
         **kwargs
     ):
         Gtk.Box.__init__(self, **kwargs)
-        Base.__init__(
-            self,
-            css_classes = css_classes,
-            setup = setup
-        )
-
         self.set_children(children)
+
+        Base.__init__(self, css_classes = css_classes, setup = setup)
 
     def set_children(self, widgets):
         for child in self.get_children():
             child.destroy()
 
         for widget in widgets:
-            self.add(widget)
+            if isinstance(widget, Gtk.Widget):
+                self.add(widget)

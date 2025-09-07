@@ -16,18 +16,17 @@ class Base(Gtk.Widget):
             setup(self)
 
     def add_css_class(self, css_class):
-        self.get_style_context().add_class(css_class)
+        if isinstance(css_class, str):
+            self.get_style_context().add_class(css_class)
 
     def remove_css_class(self, css_class):
-        self.get_style_context().remove_class(css_class)
+        if isinstance(css_class, str):
+            self.get_style_context().remove_class(css_class)
 
     def get_css_classes(self):
         return self.get_style_context().list_classes()
 
     def set_css_classes(self, css_classes):
-        if css_classes == None:
-            return
-
         for rc in self.get_css_classes():
             self.remove_css_class(rc)
 

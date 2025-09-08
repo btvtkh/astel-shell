@@ -140,6 +140,9 @@ class Launcher(Widget.Window):
                         )
                     ])
 
+                apps_scrolled_window.get_vadjustment().set_value(
+                    apps_scrolled_window.get_vadjustment().get_lower()
+                )
                 apps_box.show_all()
 
             def on_search_activate(*_):

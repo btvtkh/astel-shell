@@ -177,7 +177,11 @@ class Launcher(Widget.Window):
                 apps_box.set_children([
                     AppButton(self, app) for app in apps_list
                 ])
-            else:
+
+                apps_scrolled_window.get_vadjustment().set_value(
+                    apps_scrolled_window.get_vadjustment().get_lower()
+                )
+            elif not isinstance(apps_box.get_children()[0], Widget.Box):
                 apps_box.set_children([
                     Widget.Box(
                         halign = Gtk.Align.CENTER,
@@ -193,9 +197,6 @@ class Launcher(Widget.Window):
                     )
                 ])
 
-            apps_scrolled_window.get_vadjustment().set_value(
-                apps_scrolled_window.get_vadjustment().get_lower()
-            )
             apps_box.show_all()
 
         def on_search_activate(*_):

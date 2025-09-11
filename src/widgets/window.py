@@ -19,7 +19,6 @@ class Window(Gtk.Window, Base):
         keyboard_mode = None,
         visible = False,
         css_classes = [],
-        setup = None,
         width_request = 1,
         height_request = 1,
         **kwargs
@@ -39,7 +38,7 @@ class Window(Gtk.Window, Base):
         self.set_anchors(anchors)
         self.set_keyboard_mode(keyboard_mode)
 
-        Base.__init__(self, css_classes = css_classes, setup = setup)
+        Base.__init__(self, css_classes = css_classes)
         self.set_visible(visible)
 
     def set_namespace(self, namespace):

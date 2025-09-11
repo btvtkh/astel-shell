@@ -12,6 +12,37 @@
     margin-bottom: 4px;
     margin-left: 4px;
 
+    #sidebar-box {
+      color: $fg;
+      background-color: $bg-alt;
+      border-radius: 13px;
+      margin-right: 5px;
+      padding: 4px;
+
+      separator {
+        background-color: $bg-urg;
+        margin: 2px 5px;
+      }
+
+      button {
+        all: unset;
+        border-radius: 9px;
+        color: $fg;
+        background-color: transparent;
+        transition: background-color 200ms;
+        padding: 10px;
+
+        &:hover {
+          color: $fg;
+          background-color: $bg-urg;
+        }
+      }
+
+      #power-button {
+        color: $ac-red;
+      }
+    }
+
     #search-entry {
       all: unset;
       border-radius: 10px;

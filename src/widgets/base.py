@@ -5,15 +5,11 @@ class Base(Gtk.Widget):
         self,
         visible = True,
         css_classes = [],
-        setup = None,
         **kwargs
     ):
         Gtk.Widget.__init__(self, **kwargs)
         self.set_css_classes(css_classes)
         self.set_visible(visible)
-
-        if setup != None:
-            setup(self)
 
     def add_css_class(self, css_class):
         if isinstance(css_class, str):

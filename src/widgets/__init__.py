@@ -1,4 +1,3 @@
-from .base import Base
 from .box import Box
 from .button import Button
 from .entry import Entry
@@ -32,7 +31,6 @@ def get_children_by_name(widget, name):
     return found
 
 __all__ = [
-    "Base",
     "Box",
     "Button",
     "Entry",

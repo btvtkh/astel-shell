@@ -10,21 +10,9 @@ URGENCY_MAP = {
 
 class ActionButton(Widget.Button):
     def __init__(self, n, action):
-        def on_setup(self):
-            def on_clicked(*_):
-                n.invoke(action.id)
-
-            on_clicked_id = self.connect("clicked", on_clicked)
-
-            def on_destroy(*_):
-                self.disconnect(on_clicked_id)
-
-            self.connect("destroy", on_destroy)
-
         super().__init__(
             name = "action-button",
             hexpand = True,
-            setup = on_setup,
             child = Widget.Label(
                 hexpand = True,
                 halign = Gtk.Align.CENTER,
@@ -34,27 +22,23 @@ class ActionButton(Widget.Button):
             )
         )
 
+        def on_clicked(*_):
+            n.invoke(action.id)
+
+        on_clicked_id = self.connect("clicked", on_clicked)
+
+        def on_destroy(*_):
+            self.disconnect(on_clicked_id)
+
+        self.connect("destroy", on_destroy)
+
 class NotificationWidget(Widget.Box):
     def __init__(self, n):
-        def on_setup(w):
-            close_button = Widget.get_children_by_name(w, "close-button")[0]
-
-            def on_close_clicked(*_):
-                n.dismiss()
-
-            on_close_clicked_id = close_button.connect("clicked", on_close_clicked)
-
-            def on_destroy(*_):
-                close_button.disconnect(on_close_clicked_id)
-
-            self.connect("destroy", on_destroy)
-
         super().__init__(
             name = "notification-box",
             css_classes = [
                 URGENCY_MAP[str(n.get_urgency())]
             ],
-            setup = on_setup,
             orientation = Gtk.Orientation.VERTICAL,
             children = [
                 Widget.Box(
@@ -113,3 +97,15 @@ class NotificationWidget(Widget.Box):
                 )
             ]
         )
+
+        close_button = Widget.get_children_by_name(self, "close-button")[0]
+
+        def on_close_clicked(*_):
+            n.dismiss()
+
+        on_close_clicked_id = close_button.connect("clicked", on_close_clicked)
+
+        def on_destroy(*_):
+            close_button.disconnect(on_close_clicked_id)
+
+        self.connect("destroy", on_destroy)

@@ -6,13 +6,12 @@ class Box(Gtk.Box, Base):
         self,
         children = [],
         css_classes = [],
-        setup = None,
         **kwargs
     ):
         Gtk.Box.__init__(self, **kwargs)
         self.set_children(children)
 
-        Base.__init__(self, css_classes = css_classes, setup = setup)
+        Base.__init__(self, css_classes = css_classes)
 
     def set_children(self, widgets):
         for child in self.get_children():

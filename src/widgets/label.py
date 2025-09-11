@@ -5,8 +5,7 @@ class Label(Gtk.Label, Base):
     def __init__(
         self,
         css_classes = [],
-        setup = None,
         **kwargs
     ):
         Gtk.Label.__init__(self, **kwargs)
-        Base.__init__(self, css_classes = css_classes, setup = setup)
+        Base.__init__(self, css_classes = css_classes)

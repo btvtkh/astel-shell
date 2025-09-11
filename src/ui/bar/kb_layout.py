@@ -3,18 +3,8 @@ import widgets as Widget
 
 class KbLayoutWidget(Widget.Box):
     def __init__(self):
-        def on_setup(self):
-            hyprland = AstalHyprland.get_default()
-            kb_label = Widget.get_children_by_name(self, "kb-label")[0]
-
-            def on_keyboard_layout(x, kb, lt):
-                kb_label.set_label(lt[:2])
-
-            hyprland.connect("keyboard-layout", on_keyboard_layout)
-
         super().__init__(
             name = "kb-layout-box",
-            setup = on_setup,
             children = [
                 Widget.Label(
                     name = "kb-label",
@@ -22,3 +12,11 @@ class KbLayoutWidget(Widget.Box):
                 )
             ]
         )
+
+        hyprland = AstalHyprland.get_default()
+        kb_label = Widget.get_children_by_name(self, "kb-label")[0]
+
+        def on_keyboard_layout(x, kb, lt):
+            kb_label.set_label(lt[:2])
+
+        hyprland.connect("keyboard-layout", on_keyboard_layout)

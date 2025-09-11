@@ -68,7 +68,6 @@ class Notifications(Widget.Window):
         super().__init__(
             name = "Notifications",
             namespace = "Astel-Notifications",
-            auto_exclusive_zone = True,
             layer = GtkLayerShell.Layer.TOP,
             anchors = [
                 GtkLayerShell.Edge.TOP,

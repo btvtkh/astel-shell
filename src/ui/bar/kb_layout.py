@@ -1,7 +1,7 @@
 from gi.repository import AstalHyprland
 import widgets as Widget
 
-class KbLayoutWidget(Widget.Box):
+class KbLayout(Widget.Box):
     def __init__(self):
         super().__init__(
             name = "kb-layout-box",

@@ -1,0 +1,25 @@
+@use "theme" as *;
+
+#Control-panel {
+  background-color: transparent;
+
+  #main-box {
+    color: $fg;
+    background-color: $bg;
+    border: 1px solid $bg-urg;
+    border-radius: 21px;
+    padding: 8px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+
+    #main-page {
+      min-width: 500px;
+      min-height: 750px;
+    }
+
+    #wifi-page {
+      min-width: 400px;
+      min-height: 400px;
+    }
+  }
+}

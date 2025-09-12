@@ -37,7 +37,7 @@ class TrayItem(Widget.MenuButton):
         self.set_menu_model(item.get_menu_model())
         self.insert_action_group("dbusmenu", item.get_action_group())
 
-class TrayWidget(Widget.Box):
+class Tray(Widget.Box):
     def __init__(self):
         super().__init__(
             name = "tray-box",

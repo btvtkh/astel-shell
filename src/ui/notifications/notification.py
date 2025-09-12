@@ -32,7 +32,7 @@ class ActionButton(Widget.Button):
 
         self.connect("destroy", on_destroy)
 
-class NotificationWidget(Widget.Box):
+class Notification(Widget.Box):
     def __init__(self, n):
         super().__init__(
             name = "notification-box",

@@ -6,7 +6,7 @@ import widgets as Widget
 def calc_interval(interval):
     return interval - int(time.time()) % interval
 
-class DateTimeWidget(Widget.Box):
+class Clock(Widget.Box):
     def __init__(self):
         super().__init__(
             name = "date-time-box",

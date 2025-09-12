@@ -1,7 +1,7 @@
 import re
 from gi.repository import Gio, Gdk, Gtk, GtkLayerShell, Pango, AstalHyprland
 import widgets as Widget
-from .sidebar import SidebarWidget
+from .sidebar import Sidebar
 
 def launch_app(app):
     desktop = Gio.DesktopAppInfo.new(app.get_id())
@@ -110,7 +110,7 @@ class Launcher(Widget.Window):
                             Widget.Box(
                                 name = "main-box",
                                 children = [
-                                    SidebarWidget(self),
+                                    Sidebar(self),
                                     Widget.Box(
                                         orientation = Gtk.Orientation.VERTICAL,
                                         children = [
@@ -181,27 +181,22 @@ class Launcher(Widget.Window):
                 apps_scrolled_window.get_vadjustment().set_value(
                     apps_scrolled_window.get_vadjustment().get_lower()
                 )
-            elif not isinstance(apps_box.get_children()[0], Widget.Box):
+            elif not isinstance(apps_box.get_children()[0], Widget.Label):
                 apps_box.set_children([
-                    Widget.Box(
+                    Widget.Label(
+                        name = "no-match-label",
                         halign = Gtk.Align.CENTER,
                         valign = Gtk.Align.CENTER,
                         hexpand = True,
                         vexpand = True,
-                        children = [
-                            Widget.Label(
-                                name = "no-match-label",
-                                label = "No match found"
-                            )
-                        ]
+                        label = "No match found"
                     )
                 ])
 
             apps_box.show_all()
 
         def on_search_activate(*_):
-            if apps_box.get_children():
-                if isinstance(apps_box.get_children()[0], Gtk.Button):
+            if apps_box.get_children() and isinstance(apps_box.get_children()[0], Gtk.Button):
                     apps_box.get_children()[0].clicked()
 
         search_entry.connect("activate", on_search_activate)

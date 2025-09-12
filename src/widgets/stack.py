@@ -1,14 +1,14 @@
 from gi.repository import Gtk
 from .base import Base
 
-class Box(Gtk.Box, Base):
+class Stack(Gtk.Stack, Base):
     def __init__(
         self,
         children = [],
         css_classes = [],
         **kwargs
     ):
-        Gtk.Box.__init__(self, **kwargs)
+        Gtk.Stack.__init__(self, **kwargs)
         self.set_children(children)
 
         Base.__init__(self, css_classes = css_classes)
@@ -18,9 +18,5 @@ class Box(Gtk.Box, Base):
             child.destroy()
 
         for widget in widgets:
-            if isinstance(widget, Gtk.Widget):
-                self.add(widget)
-
-    def insert(self, widget, index):
-        self.add(widget)
-        self.reorder_child(widget, index)
+            if isinstance(widget, Gtk.Widget) and widget.get_name():
+                self.add_named(widget, widget.get_name())

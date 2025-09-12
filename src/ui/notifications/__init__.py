@@ -1,8 +1,8 @@
 from gi.repository import GLib, Gtk, GtkLayerShell, AstalNotifd
 import widgets as Widget
-from .notification import NotificationWidget
+from .notification import Notification
 
-class NotificationPopup(Widget.Box):
+class AnimatedNotification(Widget.Box):
     def __init__(self, window, n):
         super().__init__(
             halign = Gtk.Align.END,
@@ -13,7 +13,7 @@ class NotificationPopup(Widget.Box):
                     child = Widget.Revealer(
                         name = "inner-revealer",
                         transition_type = Gtk.RevealerTransitionType.SLIDE_LEFT,
-                        child = NotificationWidget(n)
+                        child = Notification(n)
                     )
                 )
             ]
@@ -53,8 +53,7 @@ class NotificationPopup(Widget.Box):
         self.connect("destroy", on_destroy)
 
         def on_display_timeout_end():
-            #on_resolved()
-            n.dismiss()
+            on_resolved()
             return GLib.SOURCE_REMOVE
 
         GLib.timeout_add_seconds(
@@ -85,9 +84,9 @@ class Notifications(Widget.Window):
 
         def on_notified(x, id, replaced):
             n = notifd.get_notification(id)
-            notification_popup = NotificationPopup(self, n)
-            outer_revealer = Widget.get_children_by_name(notification_popup, "outer-revealer")[0]
-            inner_revealer = Widget.get_children_by_name(notification_popup, "inner-revealer")[0]
+            notification = AnimatedNotification(self, n)
+            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
+            inner_revealer = Widget.get_children_by_name(notification, "inner-revealer")[0]
 
             def on_outer_timeout_end():
                 inner_revealer.set_reveal_child(True)
@@ -96,8 +95,8 @@ class Notifications(Widget.Window):
             if not self.get_visible():
                 self.show()
 
-            main_box.pack_end(notification_popup, False, False, 0)
-            notification_popup.show_all()
+            main_box.insert(notification, 0)
+            notification.show_all()
             outer_revealer.set_reveal_child(True)
 
             GLib.timeout_add(
@@ -111,10 +110,10 @@ class Notifications(Widget.Window):
         ns = notifd.get_notifications()
         ns.sort(key = lambda x: x.get_id())
         for n in ns:
-            notification_popup = NotificationPopup(self, n)
-            outer_revealer = Widget.get_children_by_name(notification_popup, "outer-revealer")[0]
-            inner_revealer = Widget.get_children_by_name(notification_popup, "inner-revealer")[0]
-            main_box.pack_end(notification_popup, False, False, 0)
+            notification = AnimatedNotification(self, n)
+            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
+            inner_revealer = Widget.get_children_by_name(notification, "inner-revealer")[0]
+            main_box.insert(notification, 0)
             inner_revealer.set_reveal_child(True)
             outer_revealer.set_reveal_child(True)
 

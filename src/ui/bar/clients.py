@@ -45,7 +45,7 @@ class ClientButton(Widgets.Button):
         self.set_css_classes([c == hyprland.get_focused_client() and "focused"])
         self.set_visible(c.get_workspace() == hyprland.get_focused_workspace())
 
-class ClientsWidget(Widgets.Box):
+class Clients(Widgets.Box):
     def __init__(self):
         super().__init__(
             name = "clients-box"

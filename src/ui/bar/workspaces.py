@@ -32,7 +32,7 @@ class WorkspaceButton(Widgets.Button):
         self.connect("destroy", on_destroy)
         self.set_css_classes([ws == hyprland.get_focused_workspace() and "focused"])
 
-class WorkspacesWidget(Widgets.Box):
+class Workspaces(Widgets.Box):
     def __init__(self):
         super().__init__(
             name = "workspaces-box"

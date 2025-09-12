@@ -1,11 +1,12 @@
 from gi.repository import Gtk, GtkLayerShell
 import widgets as Widgets
-from .workspaces import WorkspacesWidget
-from .clients import ClientsWidget
-from .date_time import DateTimeWidget
-from .tray import TrayWidget
-from .kb_layout import KbLayoutWidget
-from .launcher_button import LauncherButtonWidget
+from .workspaces import Workspaces
+from .clients import Clients
+from .clock import Clock
+from .tray import Tray
+from .kb_layout import KbLayout
+from .launcher_button import LauncherButton
+from .control_button import ControlButton
 
 class Bar(Widgets.Window):
     def __init__(self, monitor):
@@ -27,17 +28,18 @@ class Bar(Widgets.Window):
                     Widgets.Box(
                         hexpand = True,
                         children = [
-                            LauncherButtonWidget(self),
-                            WorkspacesWidget(),
-                            ClientsWidget()
+                            LauncherButton(self),
+                            Workspaces(),
+                            Clients()
                         ]
                     ),
                     Widgets.Box(
                         halign = Gtk.Align.END,
                         children = [
-                            TrayWidget(),
-                            KbLayoutWidget(),
-                            DateTimeWidget()
+                            Tray(),
+                            KbLayout(),
+                            Clock(),
+                            ControlButton(self)
                         ]
                     )
                 ]

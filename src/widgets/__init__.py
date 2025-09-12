@@ -6,8 +6,10 @@ from .image import Image
 from .label import Label
 from .menu_button import MenuButton
 from .revealer import Revealer
+from .scale import Scale
 from .scrolled_window import ScrolledWindow
 from .separator import Separator
+from .stack import Stack
 from .window import Window
 
 def get_children_by_name(widget, name):
@@ -39,8 +41,10 @@ __all__ = [
     "Label",
     "MenuButton",
     "Revealer",
+    "Scale",
     "ScrolledWindow",
     "Separator",
+    "Stack",
     "Window",
     "get_children_by_name"
 ]

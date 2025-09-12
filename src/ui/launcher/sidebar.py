@@ -1,7 +1,7 @@
 from gi.repository import Gtk
 import widgets as Widget
 
-class SidebarWidget(Widget.Box):
+class Sidebar(Widget.Box):
     def __init__(self, window):
         super().__init__(
             name = "sidebar-box",

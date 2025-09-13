@@ -25,10 +25,10 @@ class ActionButton(Widget.Button):
         def on_clicked(*_):
             n.invoke(action.id)
 
-        on_clicked_id = self.connect("clicked", on_clicked)
+        clicked_handler = self.connect("clicked", on_clicked)
 
         def on_destroy(*_):
-            self.disconnect(on_clicked_id)
+            self.disconnect(clicked_handler)
 
         self.connect("destroy", on_destroy)
 
@@ -98,14 +98,14 @@ class Notification(Widget.Box):
             ]
         )
 
-        close_button = Widget.get_children_by_name(self, "close-button")[0]
+        close_button = Widget.get_child_by_name(self, "close-button")
 
         def on_close_clicked(*_):
             n.dismiss()
 
-        on_close_clicked_id = close_button.connect("clicked", on_close_clicked)
+        close_clicked_handler = close_button.connect("clicked", on_close_clicked)
 
         def on_destroy(*_):
-            close_button.disconnect(on_close_clicked_id)
+            close_button.disconnect(close_clicked_handler)
 
         self.connect("destroy", on_destroy)

@@ -9,6 +9,7 @@ gi.require_version('GtkLayerShell', '0.1')
 gi.require_version("AstalHyprland", "0.1")
 gi.require_version("AstalNotifd", "0.1")
 gi.require_version("AstalTray", "0.1")
+gi.require_version("AstalWp", "0.1")
 
 import os
 import subprocess

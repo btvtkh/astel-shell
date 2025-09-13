@@ -30,16 +30,16 @@ class ClientButton(Widgets.Button):
             if c.get_floating():
                 hyprland.dispatch("alterzorder", f"top, {c.get_address()}")
 
-        on_focused_c_id = hyprland.connect("notify::focused-client", on_focused_client)
-        on_focused_ws_id = hyprland.connect("notify::focused-workspace", on_focused_workspace)
-        on_c_moved_id = hyprland.connect("client-moved", on_focused_workspace)
-        on_clicked_id = self.connect("clicked", on_clicked)
+        focused_client_handler = hyprland.connect("notify::focused-client", on_focused_client)
+        focused_workspace_handler = hyprland.connect("notify::focused-workspace", on_focused_workspace)
+        client_moved_handler = hyprland.connect("client-moved", on_focused_workspace)
+        clicked_handler = self.connect("clicked", on_clicked)
 
         def on_destroy(*_):
-            hyprland.disconnect(on_focused_c_id)
-            hyprland.disconnect(on_focused_ws_id)
-            hyprland.disconnect(on_c_moved_id)
-            self.disconnect(on_clicked_id)
+            hyprland.disconnect(focused_client_handler)
+            hyprland.disconnect(focused_workspace_handler)
+            hyprland.disconnect(client_moved_handler)
+            self.disconnect(clicked_handler)
 
         self.connect("destroy", on_destroy)
         self.set_css_classes([c == hyprland.get_focused_client() and "focused"])

@@ -42,7 +42,7 @@ class Sidebar(Widget.Box):
             ]
         )
 
-        power_button = Widget.get_children_by_name(self, "power-button")[0]
+        power_button = Widget.get_child_by_name(self, "power-button")
 
         def on_power_button_clicked(*_):
             window.get_application().toggle_window("Powermenu")

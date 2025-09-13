@@ -1,6 +1,7 @@
 from gi.repository import Gtk, Gdk, GtkLayerShell
 import widgets as Widget
 from .notification_list import NotificationList
+from .audio_sliders import AudioSliders
 
 class ControlPanel(Widget.Window):
     def __init__(self):
@@ -45,38 +46,9 @@ class ControlPanel(Widget.Window):
                                                 orientation = Gtk.Orientation.VERTICAL,
                                                 children = [
                                                     NotificationList(),
-                                                    Widget.Separator()
+                                                    Widget.Separator(),
+                                                    AudioSliders()
                                                 ]
-                                            ),
-                                            Widget.Box(
-                                                name = "wifi-page",
-                                                children = [
-                                                    Widget.Label(
-                                                        hexpand = True,
-                                                        vexpand = True,
-                                                        halign = Gtk.Align.CENTER,
-                                                        valign = Gtk.Align.CENTER,
-                                                        label = "wifi page"
-                                                    )
-                                                ]
-                                            )
-                                        ]
-                                    ),
-                                    Widget.Box(
-                                        children = [
-                                            Widget.Button(
-                                                name = "main-page-button",
-                                                hexpand = True,
-                                                child = Widget.Label(
-                                                    label = "main"
-                                                )
-                                            ),
-                                            Widget.Button(
-                                                name = "wifi-page-button",
-                                                hexpand = True,
-                                                child = Widget.Label(
-                                                    label = "wifi"
-                                                )
                                             )
                                         ]
                                     )
@@ -87,13 +59,6 @@ class ControlPanel(Widget.Window):
                 ]
             )
         )
-
-        pages_stack = Widget.get_children_by_name(self, "pages-stack")[0]
-        main_page_button = Widget.get_children_by_name(self, "main-page-button")[0]
-        wifi_page_button = Widget.get_children_by_name(self, "wifi-page-button")[0]
-
-        main_page_button.connect("clicked", lambda x: pages_stack.set_visible_child_name("main-page"))
-        wifi_page_button.connect("clicked", lambda x: pages_stack.set_visible_child_name("wifi-page"))
 
         def on_outside_click(*_):
             self.hide()

@@ -145,9 +145,9 @@ class Launcher(Widget.Window):
             )
         )
 
-        search_entry = Widget.get_children_by_name(self, "search-entry")[0]
-        apps_scrolled_window = Widget.get_children_by_name(self, "apps-scrolled-window")[0]
-        apps_box = Widget.get_children_by_name(self, "apps-box")[0]
+        search_entry = Widget.get_child_by_name(self, "search-entry")
+        apps_scrolled_window = Widget.get_child_by_name(self, "apps-scrolled-window")
+        apps_box = Widget.get_child_by_name(self, "apps-box")
 
         def on_outside_click(*_):
             self.hide()

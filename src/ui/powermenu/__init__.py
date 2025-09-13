@@ -69,9 +69,9 @@ class Powermenu(Widget.Window):
         )
 
         hyprland = AstalHyprland.get_default()
-        power_button = Widget.get_children_by_name(self, "power-button")[0]
-        reboot_button = Widget.get_children_by_name(self, "reboot-button")[0]
-        exit_button = Widget.get_children_by_name(self, "exit-button")[0]
+        power_button = Widget.get_child_by_name(self, "power-button")
+        reboot_button = Widget.get_child_by_name(self, "reboot-button")
+        exit_button = Widget.get_child_by_name(self, "exit-button")
 
         def on_outside_click(*_):
             self.hide()

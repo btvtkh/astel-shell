@@ -14,7 +14,7 @@ class KbLayout(Widget.Box):
         )
 
         hyprland = AstalHyprland.get_default()
-        kb_label = Widget.get_children_by_name(self, "kb-label")[0]
+        kb_label = Widget.get_child_by_name(self, "kb-label")
 
         def on_keyboard_layout(x, kb, lt):
             kb_label.set_label(lt[:2])

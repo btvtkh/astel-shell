@@ -55,12 +55,12 @@ class NotificationList(Widget.Box):
 
         notifd = AstalNotifd.get_default()
         notifications = {}
-        notifications_box = Widget.get_children_by_name(self, "notifications-box")[0]
-        clear_button = Widget.get_children_by_name(self, "clear-button")[0]
+        notifications_box = Widget.get_child_by_name(self, "notifications-box")
+        clear_button = Widget.get_child_by_name(self, "clear-button")
 
         def on_resolved(x, id, reason):
             notification = notifications[id]
-            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
+            outer_revealer = Widget.get_child_by_name(notification, "outer-revealer")
 
             def on_outer_timeout_end():
                 notification.destroy()
@@ -91,7 +91,7 @@ class NotificationList(Widget.Box):
             n = notifd.get_notification(id)
             notification = AnimatedNotification(n)
             notifications[id] = notification
-            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
+            outer_revealer = Widget.get_child_by_name(notification, "outer-revealer")
 
             if notifications_box.get_children() and isinstance(notifications_box.get_children()[0], Widget.Label):
                 notifications_box.get_children()[0].destroy()

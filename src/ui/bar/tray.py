@@ -12,7 +12,7 @@ class TrayItem(Widget.MenuButton):
             )
         )
 
-        item_icon = Widget.get_children_by_name(self, "item-icon")[0]
+        item_icon = Widget.get_child_by_name(self, "item-icon")
 
         def on_gicon(*_):
             item_icon.set_from_gicon(item.get_gicon(), Gtk.IconSize.INVALID)
@@ -23,14 +23,14 @@ class TrayItem(Widget.MenuButton):
         def on_action_group(*_):
             self.insert_action_group("dbusmenu", item.get_action_group())
 
-        on_gicon_id = item.connect("notify::gicon", on_gicon)
-        on_menu_model_id = item.connect("notify::menu-model", on_menu_model)
-        on_action_group_id = item.connect("notify::action-group", on_action_group)
+        gicon_handler = item.connect("notify::gicon", on_gicon)
+        menu_model_handler = item.connect("notify::menu-model", on_menu_model)
+        action_group_handler = item.connect("notify::action-group", on_action_group)
 
         def on_destroy(*_):
-            item.disconnect(on_gicon_id)
-            item.disconnect(on_menu_model_id)
-            item.disconnect(on_action_group_id)
+            item.disconnect(gicon_handler)
+            item.disconnect(menu_model_handler)
+            item.disconnect(action_group_handler)
 
         self.connect("destroy", on_destroy)
         item_icon.set_from_gicon(item.get_gicon(), Gtk.IconSize.INVALID)
@@ -61,10 +61,10 @@ class Tray(Widget.Box):
         )
 
         tray = AstalTray.get_default()
-        items_revealer = Widget.get_children_by_name(self, "items-revealer")[0]
-        items_box = Widget.get_children_by_name(self, "items-box")[0]
-        reveal_button = Widget.get_children_by_name(self, "reveal-button")[0]
-        reveal_icon = Widget.get_children_by_name(self, "reveal-icon")[0]
+        items_revealer = Widget.get_child_by_name(self, "items-revealer")
+        items_box = Widget.get_child_by_name(self, "items-box")
+        reveal_button = Widget.get_child_by_name(self, "reveal-button")
+        reveal_icon = Widget.get_child_by_name(self, "reveal-icon")
         items = {}
 
         def on_reveal_button_clicked(*_):

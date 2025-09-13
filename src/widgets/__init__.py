@@ -12,6 +12,20 @@ from .separator import Separator
 from .stack import Stack
 from .window import Window
 
+def get_child_by_name(widget, name):
+    if hasattr(widget, "get_name") and widget.get_name() == name:
+        return widget
+
+    if hasattr(widget, "get_children"):
+        for child in widget.get_children():
+            result = get_child_by_name(child, name)
+            if result:
+                return result
+    elif hasattr(widget, "get_child"):
+        result = get_child_by_name(widget.get_child(), name)
+        if result:
+            return result
+
 def get_children_by_name(widget, name):
     found = []
 
@@ -46,5 +60,6 @@ __all__ = [
     "Separator",
     "Stack",
     "Window",
+    "get_child_by_name",
     "get_children_by_name"
 ]

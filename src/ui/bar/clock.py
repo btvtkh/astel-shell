@@ -21,8 +21,8 @@ class Clock(Widget.Box):
             ]
         )
 
-        time_label = Widget.get_children_by_name(self, "time-label")[0]
-        date_label = Widget.get_children_by_name(self, "date-label")[0]
+        time_label = Widget.get_child_by_name(self, "time-label")
+        date_label = Widget.get_child_by_name(self, "date-label")
 
         def timeout_callback():
             date_label.set_label(datetime.now().strftime("%d %b, %a"))

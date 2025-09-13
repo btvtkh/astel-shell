@@ -22,12 +22,12 @@ class WorkspaceButton(Widgets.Button):
             if ws != hyprland.get_focused_workspace():
                 ws.focus()
 
-        on_focused_ws_id = hyprland.connect("notify::focused-workspace", on_focused_ws)
-        on_clicked_id = self.connect("clicked", on_clicked)
+        focused_workspace_handler = hyprland.connect("notify::focused-workspace", on_focused_ws)
+        clicked_handler = self.connect("clicked", on_clicked)
 
         def on_destroy(*_):
-            hyprland.disconnect(on_focused_ws_id)
-            self.disconnect(on_clicked_id)
+            hyprland.disconnect(focused_workspace_handler)
+            self.disconnect(clicked_handler)
 
         self.connect("destroy", on_destroy)
         self.set_css_classes([ws == hyprland.get_focused_workspace() and "focused"])

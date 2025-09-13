@@ -146,5 +146,40 @@
         }
       }
     }
+
+    #audio-sliders {
+      background-color: $bg-alt;
+      border-radius: 13px;
+      padding: 10px;
+
+      #microphone-box {
+        margin-top: 4px;
+      }
+
+      #speaker-mute-button, #microphone-mute-button {
+        all: unset;
+        color: $fg;
+        padding: 8px;
+        border-radius: 5px;
+        transition: background-color 200ms;
+        margin-right: 15px;
+
+        &:hover {
+          background-color: $bg-urg;
+        }
+      }
+
+      #speaker-volume-slider, #microphone-volume-slider {
+        trough {
+          slider {
+            background-color: $bg-alt;
+          }
+        }
+      }
+
+      #speaker-volume-label, #microphone-volume-label {
+        margin-left: 15px;
+      }
+    }
   }
 }

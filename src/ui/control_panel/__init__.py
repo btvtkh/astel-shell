@@ -38,12 +38,14 @@ class ControlPanel(Widget.Window):
                                         transition_type = Gtk.StackTransitionType.SLIDE_LEFT_RIGHT,
                                         hexpand = False,
                                         vexpand = False,
-                                        homogeneous = False,
+                                        vhomogeneous = False,
                                         children = [
                                             Widget.Box(
                                                 name = "main-page",
+                                                orientation = Gtk.Orientation.VERTICAL,
                                                 children = [
-                                                    NotificationList()
+                                                    NotificationList(),
+                                                    Widget.Separator()
                                                 ]
                                             ),
                                             Widget.Box(

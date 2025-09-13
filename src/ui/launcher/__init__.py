@@ -12,7 +12,7 @@ def launch_app(app):
             f"{term.get_executable()} -e {app.get_executable()}"
         or
             re.search("^env", app.get_executable()) and
-                re.sub("%a", "", app.get_commandline())
+                re.sub("%.", "", app.get_commandline())
             or
                 app.get_executable()
     }")
@@ -109,10 +109,14 @@ class Launcher(Widget.Window):
                             ),
                             Widget.Box(
                                 name = "main-box",
+                                hexpand = False,
+                                vexpand = False,
                                 children = [
                                     Sidebar(self),
                                     Widget.Box(
                                         orientation = Gtk.Orientation.VERTICAL,
+                                        hexpand = True,
+                                        vexpand = True,
                                         children = [
                                             Widget.Entry(
                                                 name = "search-entry",
@@ -121,8 +125,7 @@ class Launcher(Widget.Window):
                                             Widget.Separator(),
                                             Widget.ScrolledWindow(
                                                 name = "apps-scrolled-window",
-                                                hexpand = False,
-                                                vexpand = False,
+                                                vexpand = True,
                                                 child = Widget.Box(
                                                     name = "apps-box",
                                                     orientation = Gtk.Orientation.VERTICAL

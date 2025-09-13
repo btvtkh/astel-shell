@@ -5,6 +5,7 @@ from ui.notifications.notification import Notification
 class AnimatedNotification(Widget.Box):
     def __init__(self, n):
         super().__init__(
+            name = "animated-notification-box",
             children = [
                 Widget.Revealer(
                     name = "outer-revealer",
@@ -14,11 +15,69 @@ class AnimatedNotification(Widget.Box):
             ]
         )
 
-        outer_revealer = Widget.get_children_by_name(self, "outer-revealer")[0]
+class NotificationList(Widget.Box):
+    def __init__(self):
+        super().__init__(
+            name = "notification-list",
+            orientation = Gtk.Orientation.VERTICAL,
+            children = [
+                Widget.Box(
+                    name = "header-box",
+                    children = [
+                        Widget.Label(
+                            name = "title-label",
+                            label = "Notifications"
+                        ),
+                        Widget.Box(
+                            halign = Gtk.Align.END,
+                            hexpand = True,
+                            children = [
+                                Widget.Button(
+                                    name = "clear-button",
+                                    child = Widget.Image(
+                                        icon_name = "user-trash-symbolic"
+                                    )
+                                )
+                            ]
+                        )
+                    ]
+                ),
+                Widget.ScrolledWindow(
+                    name = "notifications-scrolled-window",
+                    vexpand = True,
+                    child = Widget.Box(
+                        name = "notifications-box",
+                        orientation = Gtk.Orientation.VERTICAL
+                    )
+                )
+            ]
+        )
 
-        def on_resolved(*_):
+        notifd = AstalNotifd.get_default()
+        notifications = {}
+        notifications_box = Widget.get_children_by_name(self, "notifications-box")[0]
+        clear_button = Widget.get_children_by_name(self, "clear-button")[0]
+
+        def on_resolved(x, id, reason):
+            notification = notifications[id]
+            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
+
             def on_outer_timeout_end():
-                self.destroy()
+                notification.destroy()
+                del notifications[id]
+
+                if len(notifications_box.get_children()) == 0:
+                    notifications_box.set_children([
+                        Widget.Label(
+                            name = "no-notifications-label",
+                            halign = Gtk.Align.CENTER,
+                            valign = Gtk.Align.CENTER,
+                            hexpand = True,
+                            vexpand = True,
+                            label = "No notifications"
+                        )
+                    ])
+
                 return GLib.SOURCE_REMOVE
 
             outer_revealer.set_reveal_child(False)
@@ -28,40 +87,39 @@ class AnimatedNotification(Widget.Box):
                 function = on_outer_timeout_end
             )
 
-        on_resolved_id = n.connect("resolved", on_resolved)
-
-        def on_destroy(*_):
-            n.disconnect(on_resolved_id)
-
-        self.connect("destroy", on_destroy)
-
-class NotificationList(Widget.Box):
-    def __init__(self):
-        super().__init__(
-            name = "notification-list-box",
-            orientation = Gtk.Orientation.VERTICAL
-        )
-
-        notifd = AstalNotifd.get_default()
-
         def on_notified(x, id, replaced):
             n = notifd.get_notification(id)
             notification = AnimatedNotification(n)
+            notifications[id] = notification
             outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
 
-            if not self.get_visible():
-                self.show()
+            if notifications_box.get_children() and isinstance(notifications_box.get_children()[0], Widget.Label):
+                notifications_box.get_children()[0].destroy()
 
-            self.insert(notification, 0)
-            notification.show_all()
+            notifications_box.insert(notification, 0)
             outer_revealer.set_reveal_child(True)
 
+        def on_clear_button_clicked(*_):
+            for n in notifd.get_notifications():
+                n.dismiss()
+
+        notifd.connect("resolved", on_resolved)
         notifd.connect("notified", on_notified)
+        clear_button.connect("clicked", on_clear_button_clicked)
 
         ns = notifd.get_notifications()
         ns.sort(key = lambda x: x.get_id())
-        for n in ns:
-            notification = AnimatedNotification(n)
-            outer_revealer = Widget.get_children_by_name(notification, "outer-revealer")[0]
-            self.insert(notification, 0)
-            outer_revealer.set_reveal_child(True)
+        if len(ns) > 0:
+            for n in ns:
+                on_notified(None, n.get_id(), False)
+        else:
+            notifications_box.set_children([
+                Widget.Label(
+                    name = "no-notifications-label",
+                    halign = Gtk.Align.CENTER,
+                    valign = Gtk.Align.CENTER,
+                    hexpand = True,
+                    vexpand = True,
+                    label = "No notifications"
+                )
+            ])

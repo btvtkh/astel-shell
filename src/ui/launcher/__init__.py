@@ -5,11 +5,11 @@ from .sidebar import Sidebar
 
 def launch_app(app):
     desktop = Gio.DesktopAppInfo.new(app.get_id())
-    term = desktop.get_string("Terminal") == "true" and Gio.AppInfo.get_default_for_uri_scheme('terminal')
+    terminal = desktop.get_string("Terminal") == "true" and Gio.AppInfo.get_default_for_uri_scheme('terminal')
 
     AstalHyprland.get_default().dispatch("exec", f"{
-        term and
-            f"{term.get_executable()} -e {app.get_executable()}"
+        terminal and
+            f"{terminal.get_executable()} -e {app.get_executable()}"
         or
             re.search("^env", app.get_executable()) and
                 re.sub("%.", "", app.get_commandline())
@@ -17,12 +17,12 @@ def launch_app(app):
                 app.get_executable()
     }")
 
-def filter_apps(apps, query):
+def get_apps(query):
     query = re.escape(query)
     filtered = []
     filtered_any = []
 
-    for app in apps:
+    for app in Gio.AppInfo.get_all():
         if app.should_show():
             if re.search("^" + query, str(app.get_name()).casefold()):
                 filtered.append(app)
@@ -168,13 +168,13 @@ class Launcher(Widget.Window):
 
                 if not apps_box.get_children():
                     apps_box.set_children([
-                        AppButton(self, app) for app in filter_apps(Gio.AppInfo.get_all(), "")
+                        AppButton(self, app) for app in get_apps("")
                     ])
 
                 self.show_all()
 
         def on_search_text(*_):
-            apps_list = filter_apps(Gio.AppInfo.get_all(), search_entry.get_text())
+            apps_list = get_apps(search_entry.get_text())
 
             if len(apps_list) > 0:
                 apps_box.set_children([
@@ -199,7 +199,7 @@ class Launcher(Widget.Window):
             apps_box.show_all()
 
         def on_search_activate(*_):
-            if apps_box.get_children() and isinstance(apps_box.get_children()[0], Gtk.Button):
+            if apps_box.get_children() and isinstance(apps_box.get_children()[0], Widget.Button):
                     apps_box.get_children()[0].clicked()
 
         search_entry.connect("activate", on_search_activate)

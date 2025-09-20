@@ -1,6 +1,8 @@
 from gi.repository import Gdk, Gtk, GtkLayerShell, AstalHyprland
 import widget as Widget
 
+hyprland = AstalHyprland.get_default()
+
 class Powermenu(Widget.LayerWindow):
     def __init__(self):
         super().__init__(
@@ -68,7 +70,6 @@ class Powermenu(Widget.LayerWindow):
             )
         )
 
-        hyprland = AstalHyprland.get_default()
         power_button = Widget.get_child_by_name(self, "power-button")
         reboot_button = Widget.get_child_by_name(self, "reboot-button")
         exit_button = Widget.get_child_by_name(self, "exit-button")

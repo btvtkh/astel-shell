@@ -80,9 +80,11 @@ class LayerWindow(Gtk.Window, Base):
 
     def get_anchors(self):
         ret = []
+
         for edge in GTK_LAYER_SHELL_EDGES:
             if GtkLayerShell.get_anchor(self, edge):
                 ret.append(edge)
+
         return ret
 
     def set_keyboard_mode(self, keyboard_mode):
@@ -91,3 +93,10 @@ class LayerWindow(Gtk.Window, Base):
 
     def get_keyboard_mode(self):
         return GtkLayerShell.get_keyboard_mode(self)
+
+    def set_child(self, widget):
+        if self.get_child():
+            self.get_child().destroy()
+
+        if isinstance(widget, Gtk.Widget):
+            self.add(widget)

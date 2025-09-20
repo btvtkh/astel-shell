@@ -2,6 +2,8 @@ from gi.repository import GLib, Gtk, AstalNotifd
 import widget as Widget
 from ui.notifications.notification import Notification
 
+notifd = AstalNotifd.get_default()
+
 class AnimatedNotification(Widget.Box):
     def __init__(self, n):
         super().__init__(
@@ -54,7 +56,6 @@ class NotificationList(Widget.Box):
             ]
         )
 
-        notifd = AstalNotifd.get_default()
         notifications = {}
         notifications_box = Widget.get_child_by_name(self, "notifications-box")
         clear_button = Widget.get_child_by_name(self, "clear-button")

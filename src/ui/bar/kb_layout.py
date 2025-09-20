@@ -1,6 +1,8 @@
 from gi.repository import AstalHyprland
 import widget as Widget
 
+hyprland = AstalHyprland.get_default()
+
 class KbLayout(Widget.Box):
     def __init__(self):
         super().__init__(
@@ -13,7 +15,6 @@ class KbLayout(Widget.Box):
             ]
         )
 
-        hyprland = AstalHyprland.get_default()
         kb_label = Widget.get_child_by_name(self, "kb-label")
 
         def on_keyboard_layout(x, kb, lt):

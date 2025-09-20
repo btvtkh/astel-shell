@@ -1,6 +1,8 @@
 from gi.repository import Pango, AstalHyprland
 import widget as Widget
 
+hyprland = AstalHyprland.get_default()
+
 class ClientButton(Widget.Button):
     def __init__(self, c):
         super().__init__(
@@ -10,8 +12,6 @@ class ClientButton(Widget.Button):
                 label = c.get_initial_class() or "Untitled"
             )
         )
-
-        hyprland = AstalHyprland.get_default()
 
         def on_focused_client(*_):
             if c == hyprland.get_focused_client():
@@ -49,8 +49,6 @@ class Clients(Widget.Box):
         super().__init__(
             name = "clients"
         )
-
-        hyprland = AstalHyprland.get_default()
 
         def on_clients(*_):
             self.set_children([

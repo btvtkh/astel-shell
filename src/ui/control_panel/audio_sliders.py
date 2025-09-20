@@ -1,6 +1,9 @@
 from gi.repository import Gtk, AstalWp
 import widget as Widget
 
+wp = AstalWp.get_default()
+audio = wp.get_audio()
+
 class AudioSliders(Widget.Box):
     def __init__(self):
         super().__init__(
@@ -56,8 +59,6 @@ class AudioSliders(Widget.Box):
             ]
         )
 
-        wp = AstalWp.get_default()
-        audio = wp.get_audio()
         speaker = audio.get_default_speaker()
         microphone = audio.get_default_microphone()
         speaker_mute_button = Widget.get_child_by_name(self, "speaker-mute-button")

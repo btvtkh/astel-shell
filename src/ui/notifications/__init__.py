@@ -2,6 +2,8 @@ from gi.repository import GLib, Gtk, GtkLayerShell, AstalNotifd
 import widget as Widget
 from .notification import Notification
 
+notifd = AstalNotifd.get_default()
+
 class AnimatedNotification(Widget.Box):
     def __init__(self, n):
         super().__init__(
@@ -37,7 +39,6 @@ class Notifications(Widget.LayerWindow):
             )
         )
 
-        notifd = AstalNotifd.get_default()
         notifications = {}
         main_box = self.get_child()
 

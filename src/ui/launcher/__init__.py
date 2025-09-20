@@ -3,11 +3,13 @@ from gi.repository import Gio, Gdk, Gtk, GtkLayerShell, Pango, AstalHyprland
 import widget as Widget
 from .sidebar import Sidebar
 
+hyprland = AstalHyprland.get_default()
+
 def launch_app(app):
     desktop = Gio.DesktopAppInfo.new(app.get_id())
     terminal = desktop.get_string("Terminal") == "true" and Gio.AppInfo.get_default_for_uri_scheme('terminal')
 
-    AstalHyprland.get_default().dispatch("exec", f"{
+    hyprland.dispatch("exec", f"{
         terminal and
             f"{terminal.get_executable()} -e {app.get_executable()}"
         or

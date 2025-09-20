@@ -1,6 +1,8 @@
 from gi.repository import AstalHyprland
 import widget as Widgets
 
+hyprland = AstalHyprland.get_default()
+
 class WorkspaceButton(Widgets.Button):
     def __init__(self, ws):
         super().__init__(
@@ -8,8 +10,6 @@ class WorkspaceButton(Widgets.Button):
                 label = ws.get_name()
             )
         )
-
-        hyprland = AstalHyprland.get_default()
 
         def on_focused_ws(*_):
             if ws == hyprland.get_focused_workspace():
@@ -36,8 +36,6 @@ class Workspaces(Widgets.Box):
         super().__init__(
             name = "workspaces"
         )
-
-        hyprland = AstalHyprland.get_default()
 
         def on_workspaces(*_):
             for child in self.get_children():

@@ -1,6 +1,8 @@
 from gi.repository import Gtk, AstalTray
 import widget as Widget
 
+tray = AstalTray.get_default()
+
 class TrayItem(Widget.MenuButton):
     def __init__(self, item):
         super().__init__(
@@ -60,7 +62,6 @@ class Tray(Widget.Box):
             ]
         )
 
-        tray = AstalTray.get_default()
         items_revealer = Widget.get_child_by_name(self, "items-revealer")
         items_box = Widget.get_child_by_name(self, "items-box")
         reveal_button = Widget.get_child_by_name(self, "reveal-button")

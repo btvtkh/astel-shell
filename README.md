@@ -10,11 +10,12 @@ gtk3
 dbus-glib
 python-dbus
 python-gobject
+dart-sass
+hyprland
 libastal-bluetooth-git
 libastal-hyprland-git
 libastal-network-git
 libastal-notifd-git
 libastal-tray-git
 libastal-wireplumber-git
-hyprland
 ```

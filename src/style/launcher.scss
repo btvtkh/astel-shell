@@ -1,0 +1,105 @@
+@use "theme" as *;
+
+#Launcher {
+  background-color: transparent;
+
+  .main-box {
+    color: $fg;
+    background-color: $bg;
+    border: 1px solid $bg-urg;
+    border-radius: 21px;
+    padding: 8px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+    min-width: 370px;
+    min-height: 450px;
+
+    #sidebar {
+      color: $fg;
+      background-color: $bg-alt;
+      border-radius: 13px;
+      margin-right: 5px;
+      padding: 4px;
+
+      separator {
+        background-color: $bg-urg;
+        margin: 2px 5px;
+      }
+
+      button {
+        all: unset;
+        border-radius: 9px;
+        color: $fg;
+        background-color: transparent;
+        transition: background-color 200ms;
+        padding: 10px;
+
+        &:hover {
+          color: $fg;
+          background-color: $bg-urg;
+        }
+      }
+
+      #power-button {
+        color: $ac-red;
+
+        &:hover {
+          color: $bg;
+          background-color: $ac-red;
+        }
+      }
+    }
+
+    entry {
+      all: unset;
+      color: $fg;
+      padding: 10px;
+    }
+
+    separator {
+      background-color: $bg-urg;
+    }
+
+    scrolledwindow {
+      margin-top: 5px;
+
+      .app-button {
+        all: unset;
+        color: $fg;
+        background-color: transparent;
+        border-radius: 13px;
+        margin-top: 3px;
+        padding: 10px;
+        transition: background-color 200ms;
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        &:focus {
+          color: $bg;
+          background-color: $ac;
+        }
+
+        &:hover:not(:focus) {
+          color: $fg;
+          background-color: $bg-urg;
+        }
+
+        .name-label {
+          font-size: 13pt;
+          font-weight: bold;
+        }
+
+        .description-label {
+          font-size: 9pt;
+        }
+      }
+
+      .empty-label {
+        font-size: 17pt;
+        color: $fg-alt;
+      }
+    }
+  }
+}

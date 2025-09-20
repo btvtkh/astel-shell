@@ -1,0 +1,38 @@
+@use "theme" as *;
+
+#Powermenu {
+  background-color: transparent;
+
+  .main-box {
+    color: $fg;
+    background-color: $bg;
+    border: 1px solid $bg-urg;
+    border-radius: 28px;
+    padding: 8px;
+
+    button {
+      all: unset;
+      min-width: 120px;
+      min-height: 120px;
+      margin-left: 4px;
+      border-radius: 20px;
+      color: $fg;
+      background-color: transparent;
+      transition: background-color 200ms;
+
+      &:hover {
+        color: $fg;
+        background-color: $bg-urg;
+      }
+
+      &:focus {
+        color: $bg;
+        background-color: $ac;
+      }
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

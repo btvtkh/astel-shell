@@ -83,3 +83,5 @@ class BluetoothQSB(Widget.Box):
 
         toggle_button.connect("clicked", on_toggle_button_clicked)
         if adapter: adapter.connect("notify::powered", on_adapter_powered)
+
+        on_adapter_powered()

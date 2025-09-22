@@ -26,16 +26,46 @@ class DeviceItem(Widget.Button):
                                 label = dev.get_name() or "Unnamed"
                             ),
                             Widget.Label(
+                                name = "device-item-description-label",
                                 css_classes = ["address-label"],
                                 halign = Gtk.Align.START,
                                 xalign = 0,
-                                label = dev.get_address()
+                                label = dev.get_connected() and "Connected" or dev.get_address()
                             )
                         ]
                     )
                 ]
             )
         )
+
+        description_label = Widget.get_child_by_name(self, "device-item-description-label")
+
+        def on_device_connected(*_):
+            if dev.get_connected():
+                description_label.set_label("Connected")
+            else:
+                description_label.set_label(dev.get_address())
+
+        def on_clicked(*_):
+            if not dev.get_connected():
+                def on_connect_device(x, res):
+                    dev.connect_device_finish(res)
+
+                dev.connect_device(on_connect_device)
+            else:
+                def on_disconnect_device(x, res):
+                    dev.disconnect_device_finish(res)
+
+                dev.disconnect_device(on_disconnect_device)
+
+        clicked_handler = self.connect("clicked", on_clicked)
+        connected_handler = dev.connect("notify::connected", on_device_connected)
+
+        def on_destroy(*_):
+            self.disconnect(clicked_handler)
+            dev.disconnect(connected_handler)
+
+        self.connect("destroy", on_destroy)
 
 class BluetoothPage(Widget.Box):
     def __init__(self):

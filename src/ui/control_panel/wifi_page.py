@@ -80,8 +80,9 @@ class AccessPointMenu(Widget.Box):
         close_button = Widget.get_child_by_name(self, "access-point-menu-close-button")
         password_entry = Widget.get_child_by_name(self, "access-point-menu-password-entry")
         obscure_button = Widget.get_child_by_name(self, "access-point-menu-password-obscure-button")
+        connect_button = Widget.get_child_by_name(self, "access-point-menu-connect-button")
 
-        def on_close_button_clicked(*_):
+        def close_menu():
             ap_stack.set_visible_child_name("access-points-list-scrolled-window")
 
             def on_transition_duration_end():
@@ -93,13 +94,43 @@ class AccessPointMenu(Widget.Box):
                 on_transition_duration_end,
             )
 
-        close_button.connect("clicked", on_close_button_clicked)
+        def on_obscure_button_clicked(*_):
+            password_entry.set_visibility(not password_entry.get_visibility())
 
+        def on_connect_button_clicked(*_):
+            if wifi.get_active_access_point() != ap:
+                def on_activate(x, res):
+                    ap.activate_finish(res)
+                    close_menu()
+
+                if ap.get_requires_password() and password_entry.get_text():
+                    ap.activate(password_entry.get_text(), on_activate)
+                else:
+                    ap.activate("", on_activate)
+            else:
+                def on_deactivate(x, res):
+                    wifi.deactivate_connection_finish(res)
+                    close_menu()
+
+                wifi.deactivate_connection(on_deactivate)
+
+        def on_close_button_clicked(*_):
+            close_menu()
+
+        close_button_clicked_handler = close_button.connect("clicked", on_close_button_clicked)
+        connect_button_clicked_handler = connect_button.connect("clicked", on_connect_button_clicked)
+
+        obscure_button_clicked_handler = None
         if password_entry and obscure_button:
-            def on_obscure_button_clicked(*_):
-                password_entry.set_visibility(not password_entry.get_visibility())
+            obscure_button_clicked_handler = obscure_button.connect("clicked", on_obscure_button_clicked)
 
-            obscure_button.connect("clicked", on_obscure_button_clicked)
+        def on_destroy(*_):
+            close_button.disconnect(close_button_clicked_handler)
+            connect_button.disconnect(connect_button_clicked_handler)
+            if obscure_button and obscure_button_clicked_handler:
+                obscure_button.disconnect(obscure_button_clicked_handler)
+
+        self.connect("destroy", on_destroy)
 
 class AccessPointItem(Widget.Button):
     def __init__(self, ap, ap_stack):
@@ -129,12 +160,6 @@ class AccessPointItem(Widget.Button):
                                 label = ap.get_bssid()
                             )
                         ]
-                    ),
-                    Widget.Image(
-                        css_classes = ["status-icon-image"],
-                        icon_name = wifi.get_active_access_point() == ap and "object-select-symbolic" or (
-                            ap.get_requires_password() and "changes-prevent-symbolic" or "changes-allow-symbolic"
-                        )
                     )
                 ]
             )

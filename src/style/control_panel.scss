@@ -377,17 +377,17 @@
           }
         }
 
-        .connect-options-box {
+        .password-box {
           color: $fg;
           background-color: $bg-alt;
           border-radius: 13px;
-          padding: 10px;
+          padding: 8px;
           margin-top: 8px;
 
           .password-entry {
             all: unset;
             color: $fg;
-            padding: 0 5px;
+            padding: 0 3px;
           }
 
           .obscure-button {
@@ -402,14 +402,6 @@
               color: $fg;
               background-color: $bg-urg;
             }
-          }
-
-          separator {
-            margin: 5px 0;
-          }
-
-          .auto-connect-label {
-            margin-left: 5px;
           }
         }
 

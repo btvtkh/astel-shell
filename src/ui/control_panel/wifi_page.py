@@ -27,43 +27,21 @@ class AccessPointMenu(Widget.Box):
                     ]
                 ),
                 wifi.get_active_access_point() != ap and Widget.Box(
-                    css_classes = ["connect-options-box"],
-                    orientation = Gtk.Orientation.VERTICAL,
+                    css_classes = ["password-box"],
                     children = [
-                        Widget.Box(
-                            children = [
-                                Widget.Entry(
-                                    name = "access-point-menu-password-entry",
-                                    css_classes = ["password-entry"],
-                                    hexpand = True,
-                                    visibility = False,
-                                    placeholder_text = "Password"
-                                ),
-                                Widget.Button(
-                                    name = "access-point-menu-password-obscure-button",
-                                    css_classes = ["obscure-button"],
-                                    child = Widget.Image(
-                                        icon_name = "veiw-reveal-symbolic"
-                                    )
-                                )
-                            ]
+                        Widget.Entry(
+                            name = "access-point-menu-password-entry",
+                            css_classes = ["password-entry"],
+                            hexpand = True,
+                            visibility = False,
+                            placeholder_text = "Password"
                         ),
-                        Widget.Separator(),
-                        Widget.Box(
-                            children = [
-                                Widget.Label(
-                                    css_classes = ["auto-connect-label"],
-                                    hexpand = True,
-                                    halign = Gtk.Align.START,
-                                    xalign = 0,
-                                    label = "Auto connect"
-                                ),
-                                Widget.CheckButton(
-                                    name = "access-point-menu-auto-connect-check-button",
-                                    css_classes = ["auto-connect-check-button"],
-                                    active = True
-                                )
-                            ]
+                        Widget.Button(
+                            name = "access-point-menu-password-obscure-button",
+                            css_classes = ["obscure-button"],
+                            child = Widget.Image(
+                                icon_name = "image-red-eye"
+                            )
                         )
                     ]
                 ),
@@ -97,6 +75,12 @@ class AccessPointMenu(Widget.Box):
         def on_obscure_button_clicked(*_):
             password_entry.set_visibility(not password_entry.get_visibility())
 
+        def on_password_entry_visibility(*_):
+            obscure_button.get_child().set_from_icon_name(
+                password_entry.get_visibility() and "view-hidden" or "image-red-eye",
+                Gtk.IconSize.BUTTON
+            )
+
         def on_connect_button_clicked(*_):
             if wifi.get_active_access_point() != ap:
                 def on_activate(x, res):
@@ -121,14 +105,18 @@ class AccessPointMenu(Widget.Box):
         connect_button_clicked_handler = connect_button.connect("clicked", on_connect_button_clicked)
 
         obscure_button_clicked_handler = None
+        password_entry_visibility_handler = None
         if password_entry and obscure_button:
             obscure_button_clicked_handler = obscure_button.connect("clicked", on_obscure_button_clicked)
+            password_entry_visibility_handler = password_entry.connect("notify::visibility", on_password_entry_visibility)
 
         def on_destroy(*_):
             close_button.disconnect(close_button_clicked_handler)
             connect_button.disconnect(connect_button_clicked_handler)
             if obscure_button and obscure_button_clicked_handler:
                 obscure_button.disconnect(obscure_button_clicked_handler)
+            if password_entry and password_entry_visibility_handler:
+                password_entry.disconnect(password_entry_visibility_handler)
 
         self.connect("destroy", on_destroy)
 

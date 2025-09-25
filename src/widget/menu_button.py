@@ -9,3 +9,10 @@ class MenuButton(Gtk.MenuButton, Base):
     ):
         Gtk.MenuButton.__init__(self, **kwargs)
         Base.__init__(self, css_classes = css_classes)
+
+    def set_child(self, widget):
+        if self.get_child():
+            self.get_child().destroy()
+
+        if isinstance(widget, Gtk.Widget):
+            self.add(widget)

@@ -14,6 +14,7 @@ class Scale(Gtk.Scale, Base):
         **kwargs
     ):
         Gtk.Scale.__init__(self, **kwargs)
+        self._dragging = False
         self.set_adjustment(Gtk.Adjustment(
             float(value),
             float(min),
@@ -22,10 +23,7 @@ class Scale(Gtk.Scale, Base):
             float(page),
             float(0)
         ))
-
         self.set_draw_value(draw_value)
-        self._dragging = False
-
         Base.__init__(self, css_classes = css_classes)
 
         def on_button_press_event(*_):

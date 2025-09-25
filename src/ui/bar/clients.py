@@ -1,17 +1,38 @@
-from gi.repository import Pango, AstalHyprland
+from gi.repository import Gtk, Pango, AstalHyprland
 import widget as Widget
 
 hyprland = AstalHyprland.get_default()
 
-class ClientButton(Widget.Button):
+class ClientButton(Widget.Box):
     def __init__(self, c):
         super().__init__(
-            child = Widget.Label(
-                max_width_chars = 15,
-                ellipsize = Pango.EllipsizeMode.END,
-                label = c.get_initial_class() or "Untitled"
-            )
+            css_classes = ["client-box"],
+            hexpand = False,
+            children = [
+                Widget.Overlay(
+                    name = "client-overlay",
+                    pass_through = True,
+                    child = Widget.Button(
+                        name = "client-button",
+                        child = Widget.Label(
+                            max_width_chars = 15,
+                            ellipsize = Pango.EllipsizeMode.END,
+                            label = c.get_initial_class() or "Untitled"
+                        )
+                    ),
+                    overlay_children = [
+                        Widget.Box(
+                            name = "client-indicator",
+                            css_classes = ["indicator"],
+                            valign = Gtk.Align.END,
+                            hexpand = True
+                        )
+                    ]
+                )
+            ]
         )
+
+        button = Widget.get_child_by_name(self, "client-button")
 
         def on_focused_client(*_):
             if c == hyprland.get_focused_client():
@@ -32,17 +53,17 @@ class ClientButton(Widget.Button):
         focused_client_handler = hyprland.connect("notify::focused-client", on_focused_client)
         focused_workspace_handler = hyprland.connect("notify::focused-workspace", on_focused_workspace)
         client_moved_handler = hyprland.connect("client-moved", on_focused_workspace)
-        clicked_handler = self.connect("clicked", on_clicked)
+        clicked_handler = button.connect("clicked", on_clicked)
 
         def on_destroy(*_):
             hyprland.disconnect(focused_client_handler)
             hyprland.disconnect(focused_workspace_handler)
             hyprland.disconnect(client_moved_handler)
-            self.disconnect(clicked_handler)
+            button.disconnect(clicked_handler)
 
         self.connect("destroy", on_destroy)
-        self.set_css_classes([c == hyprland.get_focused_client() and "focused"])
         self.set_visible(c.get_workspace() == hyprland.get_focused_workspace())
+        self.add_css_class(c == hyprland.get_focused_client() and "focused")
 
 class Clients(Widget.Box):
     def __init__(self):

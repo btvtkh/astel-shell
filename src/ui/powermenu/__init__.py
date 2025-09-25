@@ -120,4 +120,3 @@ class Powermenu(Widget.LayerWindow):
 
         for i in Widget.get_children_by_name(self, "outside-eventbox"):
             i.connect("button-press-event", on_outside_click)
-

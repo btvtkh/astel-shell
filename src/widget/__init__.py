@@ -7,6 +7,7 @@ from .image import Image
 from .label import Label
 from .layer_window import LayerWindow
 from .menu_button import MenuButton
+from .overlay import Overlay
 from .revealer import Revealer
 from .scale import Scale
 from .scrolled_window import ScrolledWindow
@@ -18,9 +19,8 @@ from .switch import Switch
 def get_child_by_name(widget, name):
     if hasattr(widget, "get_name") and widget.get_name() == name:
         return widget
-
-    if hasattr(widget, "get_children"):
-        for child in widget.get_children():
+    elif hasattr(widget, "get_children"):
+       for child in widget.get_children():
             result = get_child_by_name(child, name)
             if result:
                 return result
@@ -35,8 +35,7 @@ def get_children_by_name(widget, name):
     def find_child_recursive(_widget, _name):
         if hasattr(_widget, "get_name") and _widget.get_name() == _name:
             found.append(_widget)
-
-        if hasattr(_widget, "get_children"):
+        elif hasattr(_widget, "get_children"):
             for child in _widget.get_children():
                 result = find_child_recursive(child, _name)
                 if result:
@@ -59,6 +58,7 @@ __all__ = [
     "Label",
     "LayerWindow",
     "MenuButton",
+    "Overlay",
     "Revealer",
     "Scale",
     "ScrolledWindow",

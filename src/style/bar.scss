@@ -55,27 +55,41 @@
   #clients {
     margin: 6px 3px;
 
-    button {
-      all: unset;
+    .client-box {
       margin-left: 3px;
-      padding: 0 10px;
-      color: $fg;
-      background-color: $bg-alt;
-      border-radius: 10px;
-      border-color: $ac;
-      border-style: solid;
-      transition: background-color 200ms, border-width 200ms;
 
       &:first-child {
         margin-left: 0
       }
 
-      &:hover {
-        background-color: $bg-urg;
+      button {
+        all: unset;
+        padding: 0 10px;
+        color: $fg;
+        background-color: $bg-alt;
+        border-radius: 10px;
+        border-color: $ac;
+        border-style: solid;
+        transition: background-color 200ms;
+
+        &:hover {
+          background-color: $bg-urg;
+        }
+      }
+
+      .indicator {
+        min-height: 4px;
+        background-color: transparent;
+        border-radius: 3px 3px 0 0;
+        margin: 0 30px;
+        transition: 200ms margin, 200ms background-color;
       }
 
       &.focused {
-        border-width: 0 0 3px 0;
+        .indicator {
+          background-color: $ac;
+          margin: 0 15px;
+        }
       }
     }
   }

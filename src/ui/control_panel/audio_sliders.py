@@ -30,7 +30,8 @@ class AudioSliders(Widget.Box):
                         Widget.Label(
                             name = "speaker-volume-label",
                             css_classes = ["volume-label"],
-                            width_chars = 5
+                            width_chars = 5,
+                            label = "0%"
                         )
                     ]
                 ),
@@ -54,7 +55,8 @@ class AudioSliders(Widget.Box):
                         Widget.Label(
                             name = "microphone-volume-label",
                             css_classes = ["volume-label"],
-                            width_chars = 5
+                            width_chars = 5,
+                            label = "0%"
                         )
                     ]
                 )

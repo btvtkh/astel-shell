@@ -1,7 +1,7 @@
 import widget as Widget
 
 class LauncherButton(Widget.Button):
-    def __init__(self, window):
+    def __init__(self):
         super().__init__(
             name = "launcher-button",
             visible = True,
@@ -10,8 +10,3 @@ class LauncherButton(Widget.Button):
                 icon_name = "system-search-symbolic"
             )
         )
-
-        def on_clicked(*_):
-            window.get_application().toggle_window("Launcher")
-
-        self.connect("clicked", on_clicked)

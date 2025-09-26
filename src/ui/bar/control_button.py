@@ -1,7 +1,7 @@
 import widget as Widget
 
 class ControlButton(Widget.Button):
-    def __init__(self, window):
+    def __init__(self):
         super().__init__(
             name = "control-button",
             visible = True,
@@ -10,8 +10,3 @@ class ControlButton(Widget.Button):
                 icon_name = "preferences-system-symbolic"
             )
         )
-
-        def on_clicked(*_):
-            window.get_application().toggle_window("Control-panel")
-
-        self.connect("clicked", on_clicked)

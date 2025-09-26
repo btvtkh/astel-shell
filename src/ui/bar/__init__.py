@@ -28,7 +28,7 @@ class Bar(Widget.LayerWindow):
                     Widget.Box(
                         hexpand = True,
                         children = [
-                            LauncherButton(self),
+                            LauncherButton(),
                             Workspaces(),
                             Clients()
                         ]
@@ -39,9 +39,21 @@ class Bar(Widget.LayerWindow):
                             Tray(),
                             KbLayout(),
                             Clock(),
-                            ControlButton(self)
+                            ControlButton()
                         ]
                     )
                 ]
             )
         )
+
+        launcher_button = Widget.get_child_by_name(self, "launcher-button")
+        control_button = Widget.get_child_by_name(self, "control-button")
+
+        def on_launcher_button_clicked(*_):
+            self.get_application().toggle_window("Launcher")
+
+        def on_control_button_clicked(*_):
+            self.get_application().toggle_window("Control-panel")
+
+        launcher_button.connect("clicked", on_launcher_button_clicked)
+        control_button.connect("clicked", on_control_button_clicked)

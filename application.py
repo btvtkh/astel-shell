@@ -1,11 +1,12 @@
+import re
 from gi.repository import Gio, Gdk, Gtk
 
 class Application(Gtk.Application):
-    def __init__(self):
+    def __init__(self, **kwargs):
         Gtk.Application.__init__(
             self,
-            application_id = "com.github.btvtkh.Astel",
-            flags = Gio.ApplicationFlags.NON_UNIQUE
+            flags = Gio.ApplicationFlags.NON_UNIQUE,
+            **kwargs
         )
 
         self._screen = Gdk.Screen.get_default()
@@ -14,9 +15,9 @@ class Application(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
-        dbus_node_info = Gio.DBusNodeInfo.new_for_xml("""
+        dbus_node_info = Gio.DBusNodeInfo.new_for_xml(f"""
             <node>
-                <interface name="com.github.btvtkh.Astel.Application">
+                <interface name="{self.get_application_id()}.Application">
                     <method name="ToggleWindow">
                         <arg type="s" name="window_name" direction="in"/>
                     </method>
@@ -43,9 +44,9 @@ class Application(Gtk.Application):
         def on_bus_acquired(connection, name):
             try:
                 connection.register_object(
-                    "/com/github/btvtkh/Astel",
+                    "/" + re.sub(r"\.", "/", self.get_application_id()),
                     dbus_node_info.lookup_interface(
-                        "com.github.btvtkh.Astel.Application"
+                        f"{self.get_application_id()}.Application"
                     ),
                     dbus_method_handler,
                     None,
@@ -63,7 +64,7 @@ class Application(Gtk.Application):
 
         Gio.bus_own_name(
             Gio.BusType.SESSION,
-            "com.github.btvtkh.Astel",
+            self.get_application_id(),
             Gio.BusNameOwnerFlags.NONE,
             on_bus_acquired,
             on_name_acquired,

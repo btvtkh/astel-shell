@@ -276,11 +276,6 @@
       min-height: 500px;
 
       scrolledwindow {
-        .wait-spinner {
-          min-width: 30px;
-          min-height: 30px;
-        }
-
         .empty-label {
           font-size: 17pt;
           color: $fg-alt;
@@ -417,6 +412,10 @@
           &:hover {
             color: $fg;
             background-color: $bg-urg;
+          }
+
+          label {
+            font-weight: bold;
           }
         }
       }

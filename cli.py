@@ -1,7 +1,4 @@
 import sys
-import gi
-gi.require_version("GLib", "2.0")
-gi.require_version("Gio", "2.0")
 from gi.repository import GLib, Gio
 
 session_bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)

@@ -40,7 +40,7 @@ class AccessPointMenu(Widget.Box):
                             name = "access-point-menu-password-obscure-button",
                             css_classes = ["obscure-button"],
                             child = Widget.Image(
-                                icon_name = "image-red-eye"
+                                icon_name = "view-conceal-symbolic"
                             )
                         )
                     ]
@@ -77,7 +77,7 @@ class AccessPointMenu(Widget.Box):
 
         def on_password_entry_visibility(*_):
             obscure_button.get_child().set_from_icon_name(
-                password_entry.get_visibility() and "view-hidden" or "image-red-eye",
+                password_entry.get_visibility() and "view-reveal-symbolic" or "view-conceal-symbolic",
                 Gtk.IconSize.BUTTON
             )
 

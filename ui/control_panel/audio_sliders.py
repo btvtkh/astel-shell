@@ -44,7 +44,7 @@ class AudioSliders(Widget.Box):
                             css_classes = ["mute-button"],
                             child = Widget.Image(
                                 name = "microphone-mute-icon",
-                                icon_name = "microphone-sensitivity-muted-symbolic"
+                                icon_name = "microphone-disabled-symbolic"
                             )
                         ),
                         Widget.Scale(
@@ -105,7 +105,7 @@ class AudioSliders(Widget.Box):
                 microphone_volume_slider.add_css_class("mute")
                 microphone_mute_button.add_css_class("mute")
                 microphone_mute_icon.set_from_icon_name(
-                    "microphone-sensitivity-muted-symbolic",
+                    "microphone-disabled-symbolic",
                     Gtk.IconSize.BUTTON
                 )
             else:

@@ -7,6 +7,6 @@ class ControlButton(Widget.Button):
             visible = True,
             child = Widget.Image(
                 visible = True,
-                icon_name = "preferences-system-symbolic"
+                icon_name = "applications-system-symbolic",
             )
         )

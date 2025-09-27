@@ -57,13 +57,13 @@ class AppButton(Widget.Button):
                         max_width_chars = 45,
                         label = app.get_name()
                     ),
-                    app.get_description() and Widget.Label(
+                    Widget.Label(
                         css_classes = ["description-label"],
                         halign = Gtk.Align.START,
                         xalign = 0,
                         ellipsize = Pango.EllipsizeMode.END,
                         max_width_chars = 45,
-                        label = app.get_description()
+                        label = app.get_description() or "No description"
                     )
                 ]
             )

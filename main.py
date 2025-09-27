@@ -5,7 +5,7 @@ gi.require_version("GObject", "2.0")
 gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
-gi.require_version('GtkLayerShell', '0.1')
+gi.require_version("GtkLayerShell", '0.1')
 gi.require_version("AstalHyprland", "0.1")
 gi.require_version("AstalNotifd", "0.1")
 gi.require_version("AstalTray", "0.1")
@@ -13,20 +13,15 @@ gi.require_version("AstalWp", "0.1")
 gi.require_version("AstalNetwork", "0.1")
 gi.require_version("AstalBluetooth", "0.1")
 
-import os
-import subprocess
-from gi.repository import GLib, Gdk
+import sys, subprocess
+from gi.repository import Gdk
 from application import Application
-from ui.bar import Bar
-from ui.notifications import Notifications
-from ui.launcher import Launcher
-from ui.powermenu import Powermenu
-from ui.control_panel import ControlPanel
+from ui import Bar, Notifications, Launcher, Powermenu, ControlPanel
 
-class ShellApp(Application):
-    def do_activate(self):
-        scss = os.path.expanduser("~/.astel-shell/style/index.scss")
-        css = "/tmp/style.css"
+def main():
+    def on_activate(self):
+        scss = f"{sys.path[0]}/style/index.scss"
+        css = "/tmp/astel-style.css"
         subprocess.run(["sass", scss, css])
         self.apply_css(css, False)
 
@@ -62,12 +57,12 @@ class ShellApp(Application):
         self.add_window(control_panel)
         self.add_window(powermenu)
 
-def main():
-    shell_app = ShellApp()
-    GLib.set_prgname("Astel-Shell")
+    app = Application(application_id = "com.github.btvtkh.Astel")
+    app.connect("activate", on_activate)
+
     try:
-        shell_app.run()
+        app.run()
     except KeyboardInterrupt:
-        shell_app.quit()
+        app.quit()
 
 main()

@@ -1,5 +1,3 @@
-# Astel-Shell
-
 <p align="center">
     <img src="assets/astel0.png">
 </p>

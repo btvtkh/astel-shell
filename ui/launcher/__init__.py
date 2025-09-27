@@ -1,12 +1,12 @@
 import re
-from gi.repository import Gio, Gdk, Gtk, GtkLayerShell, Pango, AstalHyprland
+from gi.repository import Gio, GioUnix, Gdk, Gtk, GtkLayerShell, Pango, AstalHyprland
 import widget as Widget
 from .sidebar import Sidebar
 
 hyprland = AstalHyprland.get_default()
 
 def launch_app(app):
-    desktop = Gio.DesktopAppInfo.new(app.get_id())
+    desktop = GioUnix.DesktopAppInfo.new(app.get_id())
     terminal = desktop.get_string("Terminal") == "true" and Gio.AppInfo.get_default_for_uri_scheme('terminal')
 
     hyprland.dispatch("exec", f"{

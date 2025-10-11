@@ -1,0 +1,96 @@
+@use "theme" as *;
+
+#Notifications {
+  background-color: transparent;
+
+  .animated-notification-box {
+    margin-top: 5px;
+
+    &:first-child {
+      margin-top: 20px;
+    }
+
+    .notification-box {
+      min-width: 350px;
+      background-color: $bg;
+      margin-right: 20px;
+      border: 1px solid $bg-urg;
+      padding: 8px;
+      border-radius: 18px;
+      color: $fg;
+
+      .header-box {
+        margin: 5px 5px 0 5px;
+
+        .app-name-label {
+          font-size: 11pt;
+          font-weight: bold;
+        }
+
+        .time-label {
+          font-size: 10pt;
+          color: $fg-alt;
+        }
+
+        .close-button {
+          all: unset;
+          margin-left: 5px;
+          color: $ac-red;
+          padding: 5px;
+          border-radius: 5px;
+          transition: background-color 200ms;
+
+          &:hover {
+            color: $bg;
+            background-color: $ac-red;
+          }
+        }
+      }
+
+      separator {
+        background-color: $bg-urg;
+        margin-top: 5px;
+      }
+
+      .body-box {
+        margin: 5px 5px 0 5px;
+
+        &:last-child {
+          margin: 5px;
+        }
+
+        .summary-label {
+          font-size: 13pt;
+          font-weight: bold;
+        }
+
+        .body-label {
+          font-size: 10pt;
+          margin-top: 3px;
+        }
+      }
+
+      .actions-box {
+        margin-top: 7px;
+
+        .action-button {
+          all: unset;
+          color: $fg;
+          background-color: $bg-alt;
+          border-radius: 9px;
+          padding: 8px;
+          transition: background-color 200ms;
+          margin-left: 3px;
+
+          &:first-child {
+            margin-left: 0;
+          }
+
+          &:hover {
+            background-color: $bg-urg;
+          }
+        }
+      }
+    }
+  }
+}

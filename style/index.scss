@@ -1,0 +1,10 @@
+@use "bar" as *;
+@use "notifications" as *;
+@use "launcher" as *;
+@use "controlpanel" as *;
+@use "powermenu" as *;
+
+label {
+  font-size: 11pt;
+  font-weight: 500;
+}

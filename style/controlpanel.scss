@@ -1,0 +1,457 @@
+@use "theme" as *;
+
+#Control-panel {
+  background-color: transparent;
+
+  .main-box {
+    color: $fg;
+    background-color: $bg;
+    border: 1px solid $bg-urg;
+    border-radius: 23px;
+    padding: 10px;
+    margin-bottom: 4px;
+    margin-right: 4px;
+
+    #main-page {
+      min-width: 450px;
+      min-height: 750px;
+
+      separator {
+        background-color: $bg-urg;
+        margin: 4px 0;
+      }
+
+      #notification-list {
+        .header-box {
+          color: $fg;
+          padding: 4px;
+
+          .title-label {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-left: 7px;
+          }
+
+          .clear-button {
+            all: unset;
+            border-radius: 9px;
+            color: $ac-red;
+            background-color: transparent;
+            transition: background-color 200ms;
+            padding: 10px;
+
+            &:hover {
+              color: $bg;
+              background-color: $ac-red;
+            }
+          }
+        }
+
+        scrolledwindow {
+          margin-top: 4px;
+
+          .empty-label {
+            font-size: 17pt;
+            color: $fg-alt;
+          }
+
+          .animated-notification-box {
+            margin-top: 4px;
+
+            &:first-child {
+              margin-top: 0;
+            }
+
+            .notification-box {
+              color: $fg;
+              background-color: $bg-alt;
+              border-radius: 13px;
+              padding: 8px;
+
+              .header-box {
+                .app-name-label {
+                  font-size: 11pt;
+                  font-weight: bold;
+                }
+
+                .time-label {
+                  font-size: 10pt;
+                  color: $fg-alt;
+                }
+
+                .close-button {
+                  all: unset;
+                  margin-left: 5px;
+                  color: $ac-red;
+                  padding: 5px;
+                  border-radius: 5px;
+                  transition: background-color 200ms;
+
+                  &:hover {
+                    color: $bg;
+                    background-color: $ac-red;
+                  }
+                }
+              }
+
+              separator {
+                margin-top: 5px;
+              }
+
+              .body-box {
+                margin: 5px 5px 0 5px;
+
+                &:last-child {
+                  margin: 5px;
+                }
+
+                .summary-label {
+                  font-size: 13pt;
+                  font-weight: bold;
+                }
+
+                .body-label {
+                  font-size: 10pt;
+                  margin-top: 3px;
+                }
+              }
+
+              .actions-box {
+                margin-top: 7px;
+
+                .action-button {
+                  all: unset;
+                  color: $fg;
+                  background-color: $bg-urg;
+                  border-radius: 9px;
+                  padding: 8px;
+                  transition: background-color 200ms;
+                  margin-left: 3px;
+
+                  &:first-child {
+                    margin-left: 0;
+                  }
+
+                  &:hover {
+                    color: $bg;
+                    background-color: $ac;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      #audio-sliders {
+        background-color: $bg-alt;
+        border-radius: 13px;
+        padding: 10px;
+
+        .slider-container {
+          margin-bottom: 4px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .mute-button {
+            all: unset;
+            color: $fg;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 200ms;
+            margin-right: 15px;
+
+            &:hover {
+              background-color: $bg-urg;
+            }
+          }
+
+          .volume-slider {
+            trough {
+              slider {
+                background-color: $bg-alt;
+              }
+            }
+          }
+
+          .volume-label {
+            margin-left: 15px;
+          }
+        }
+      }
+
+      .qsb-box {
+        margin-top: 4px;
+
+        .qsb {
+          color: $fg;
+          background-color: $bg-alt;
+          border-radius: 13px;
+          margin-right: 4px;
+
+          &:last-child {
+            margin-right: 0;
+          }
+
+          separator {
+            background-color: $bg-urg;
+            transition: background-color 200ms;
+
+            &.hovered {
+              background-color: $fg-alt;
+            }
+          }
+
+          .toggle-button {
+            all: unset;
+            color: $fg;
+            background-color: transparent;
+            transition: background-color, 200ms;
+            border-radius: 13px 0 0 13px;
+            padding: 8px 0;
+
+            &:hover {
+              background-color: $bg-urg;
+            }
+
+            .status-icon {
+              margin: 0 12px;
+            }
+
+            .status-label {
+              font-size: 9pt;
+            }
+
+            .title-label {
+              font-weight: bold;
+            }
+          }
+
+          .reveal-button {
+            all: unset;
+            color: $fg;
+            background-color: transparent;
+            transition: background-color, 200ms;
+            border-radius: 0 13px 13px 0;
+            padding: 0 10px;
+
+            &:hover {
+              background-color: $bg-urg;
+            }
+          }
+
+          &.toggled {
+            color: $bg;
+            background-color: $ac;
+
+            separator {
+              background-color: $bg;
+            }
+
+            .toggle-button {
+              color: $bg;
+
+              &:hover {
+                background-color: $fg;
+              }
+            }
+
+            .reveal-button {
+              color: $bg;
+
+              &:hover {
+                background-color: $fg;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #wifi-page, #bluetooth-page {
+      min-width: 450px;
+      min-height: 500px;
+
+      scrolledwindow {
+        .empty-label {
+          font-size: 17pt;
+          color: $fg-alt;
+        }
+      }
+
+      .bottombar-box {
+        color: $fg;
+        background-color: $bg-alt;
+        border-radius: 13px;
+        padding: 4px;
+        margin-top: 4px;
+
+        separator {
+          background-color: $bg-urg;
+          margin: 5px 2px;
+        }
+
+        switch {
+          margin-left: 10px;
+          margin-right: 10px;
+        }
+
+        button {
+          all: unset;
+          border-radius: 9px;
+          color: $fg;
+          background-color: transparent;
+          transition: background-color 200ms;
+          padding: 10px;
+
+          &:hover {
+            color: $fg;
+            background-color: $bg-urg;
+          }
+        }
+      }
+    }
+
+    #wifi-page {
+      #access-point-item {
+        all: unset;
+        border-radius: 13px;
+        color: $fg;
+        background-color: transparent;
+        transition: background-color 200ms;
+        padding: 10px;
+        margin-top: 4px;
+
+        &:hover {
+          color: $fg;
+          background-color: $bg-urg;
+        }
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .strength-icon-image {
+          margin-right: 10px;
+        }
+
+        .ssid-label {
+          font-weight: bold;
+        }
+
+        .bssid-label {
+          font-size: 9pt;
+        }
+      }
+
+      #access-point-menu {
+        .header-box {
+          padding: 4px;
+
+          .close-button {
+            all: unset;
+            border-radius: 9px;
+            color: $fg;
+            background-color: transparent;
+            transition: background-color 200ms;
+            padding: 8px;
+
+            &:hover {
+              color: $fg;
+              background-color: $bg-urg;
+            }
+          }
+
+          .title-label {
+            font-size: 13pt;
+            font-weight: bold;
+            margin-left: 10px;
+          }
+        }
+
+        .password-box {
+          color: $fg;
+          background-color: $bg-alt;
+          border-radius: 13px;
+          padding: 8px;
+          margin-top: 8px;
+
+          .password-entry {
+            all: unset;
+            color: $fg;
+            padding: 0 3px;
+          }
+
+          .obscure-button {
+            all: unset;
+            border-radius: 5px;
+            color: $fg;
+            background-color: transparent;
+            transition: background-color 200ms;
+            padding: 5px;
+
+            &:hover {
+              color: $fg;
+              background-color: $bg-urg;
+            }
+          }
+        }
+
+        .connect-button {
+          all: unset;
+          border-radius: 13px;
+          color: $fg;
+          background-color: $bg-alt;
+          transition: background-color 200ms;
+          padding: 10px;
+          margin-top: 8px;
+
+          &:hover {
+            color: $fg;
+            background-color: $bg-urg;
+          }
+
+          label {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+
+    #bluetooth-page {
+      #device-item {
+        all: unset;
+        border-radius: 13px;
+        color: $fg;
+        background-color: transparent;
+        transition: background-color 200ms;
+        padding: 10px;
+        margin-top: 4px;
+
+        &:hover {
+          color: $fg;
+          background-color: $bg-urg;
+        }
+
+        &:first-child {
+          margin-top: 0;
+        }
+
+        .icon-image {
+          margin-right: 10px;
+        }
+
+        .name-label {
+          font-weight: bold;
+        }
+
+        .address-label {
+          font-size: 9pt;
+        }
+      }
+    }
+  }
+}

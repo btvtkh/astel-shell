@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="assets/astel2.png">
+    <img src="assets/astel3.png">
 </p>
 
 ### Dependencies

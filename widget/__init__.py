@@ -1,5 +1,6 @@
 from .box import Box
 from .button import Button
+from .centerbox import CenterBox
 from .checkbutton import CheckButton
 from .entry import Entry
 from .eventbox import EventBox
@@ -51,6 +52,7 @@ def get_children_by_name(widget, name):
 __all__ = [
     "Box",
     "Button",
+    "CenterBox",
     "CheckButton",
     "Entry",
     "EventBox",

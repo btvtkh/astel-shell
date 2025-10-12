@@ -6,14 +6,14 @@ class Overlay(Gtk.Overlay, Base):
         self,
         pass_through = False,
         child = None,
-        overlay = [],
+        overlays = [],
         css_classes = [],
         **kwargs
     ):
         Gtk.Overlay.__init__(self, **kwargs)
         self._pass_through = pass_through
         self.set_child(child)
-        self.set_overlay(overlay)
+        self.set_overlays(overlays)
         Base.__init__(self, css_classes = css_classes)
 
     def set_pass_through(self, pass_through):
@@ -26,7 +26,7 @@ class Overlay(Gtk.Overlay, Base):
     def get_pass_through(self):
         return self._pass_through
 
-    def set_overlay(self, widgets):
+    def set_overlays(self, widgets):
         for child in self.get_children():
             if child != self.get_child():
                 child.destroy()
@@ -36,7 +36,7 @@ class Overlay(Gtk.Overlay, Base):
                 self.add_overlay(widget)
                 self.set_overlay_pass_through(widget, self._pass_through)
 
-    def get_overlay(self):
+    def get_overlays(self):
         ret = []
 
         for child in self.get_children():

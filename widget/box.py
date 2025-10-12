@@ -10,7 +10,6 @@ class Box(Gtk.Box, Base):
     ):
         Gtk.Box.__init__(self, **kwargs)
         self.set_children(children)
-
         Base.__init__(self, css_classes = css_classes)
 
     def insert(self, widget, index):

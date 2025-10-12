@@ -5,8 +5,8 @@ class Scale(Gtk.Scale, Base):
     def __init__(
         self,
         value = 0.0,
-        min = 0.0,
-        max = 1.0,
+        minimum = 0.0,
+        maximum = 1.0,
         step = 0.05,
         page = 0.01,
         draw_value = False,
@@ -18,8 +18,8 @@ class Scale(Gtk.Scale, Base):
         self.set_adjustment(
             Gtk.Adjustment(
                 float(value),
-                float(min),
-                float(max),
+                float(minimum),
+                float(maximum),
                 float(step),
                 float(page),
                 float(0)
@@ -75,16 +75,16 @@ class Scale(Gtk.Scale, Base):
     def get_value(self):
         return self.get_adjustment().get_value()
 
-    def set_min(self, min):
+    def set_minimum(self, min):
         self.get_adjustment().set_lower(float(min))
 
-    def get_min(self):
+    def get_minimum(self):
         return self.get_adjustment().get_lower()
 
-    def set_max(self, max):
+    def set_maximum(self, max):
         self.get_adjustment().set_upper(float(max))
 
-    def get_max(self):
+    def get_maximum(self):
         return self.get_adjustment().get_upper()
 
     def set_step(self, step):

@@ -21,27 +21,29 @@ def Bar(monitor):
             GtkLayerShell.Edge.RIGHT
         ],
         visible = True,
-        child = Widget.Box(
+        child = Widget.CenterBox(
             css_classes = ["main-box"],
-            children = [
-                Widget.Box(
-                    hexpand = True,
-                    children = [
-                        LauncherButton(),
-                        Workspaces(),
-                        Clients()
-                    ]
-                ),
-                Widget.Box(
-                    halign = Gtk.Align.END,
-                    children = [
-                        Tray(),
-                        KbLayout(),
-                        Clock(),
-                        ControlButton()
-                    ]
-                )
-            ]
+            start_widget = Widget.Box(
+                hexpand = True,
+                children = [
+                    LauncherButton(),
+                    Workspaces()
+                ]
+            ),
+            center_widget = Widget.Box(
+                children = [
+                    Clients()
+                ]
+            ),
+            end_widget = Widget.Box(
+                halign = Gtk.Align.END,
+                children = [
+                    Tray(),
+                    KbLayout(),
+                    Clock(),
+                    ControlButton()
+                ]
+            )
         )
     )
 

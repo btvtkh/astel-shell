@@ -60,14 +60,14 @@ def Notifications():
             return GLib.SOURCE_REMOVE
 
         def on_inner_timeout_end():
-            outer_revealer.set_reveal_child(False)
+            outer_revealer.conceal()
             GLib.timeout_add(
                 outer_revealer.get_transition_duration(),
                 on_outer_timeout_end
             )
             return GLib.SOURCE_REMOVE
 
-        inner_revealer.set_reveal_child(False)
+        inner_revealer.conceal()
         GLib.timeout_add(
             inner_revealer.get_transition_duration(),
             on_inner_timeout_end
@@ -84,10 +84,10 @@ def Notifications():
             ret.show()
 
         main_box.insert(notification, 0)
-        outer_revealer.set_reveal_child(True)
+        outer_revealer.reveal()
 
         def on_outer_timeout_end():
-            inner_revealer.set_reveal_child(True)
+            inner_revealer.reveal()
             return GLib.SOURCE_REMOVE
 
         GLib.timeout_add(

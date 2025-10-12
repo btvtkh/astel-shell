@@ -11,7 +11,7 @@ def ClientButton(c):
             Widget.Overlay(
                 name = "client-overlay",
                 pass_through = True,
-                overlay = [
+                overlays = [
                     Widget.Box(
                         name = "client-indicator",
                         css_classes = ["indicator"],

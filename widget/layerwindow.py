@@ -29,7 +29,6 @@ class LayerWindow(Gtk.Window, Base):
             height_request = height_request,
             **kwargs
         )
-
         GtkLayerShell.init_for_window(self)
         self.set_namespace(namespace)
         self.set_monitor(monitor)
@@ -37,7 +36,6 @@ class LayerWindow(Gtk.Window, Base):
         self.set_layer(layer)
         self.set_anchors(anchors)
         self.set_keyboard_mode(keyboard_mode)
-
         Base.__init__(self, css_classes = css_classes)
         self.set_visible(visible)
 

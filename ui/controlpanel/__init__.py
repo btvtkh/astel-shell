@@ -62,15 +62,15 @@ def ControlPanel():
     bluetooth_page_close_button = Widget.get_child_by_name(ret, "bluetooth-page-close-button")
 
     def on_wifi_qsb_reveal_button_clicked(*_):
-        pages_stack.set_visible_child_name("wifi-page")
+        pages_stack.reveal_child("wifi-page")
         wifi_page_ap_stack.destroy_named("access-point-menu")
-        wifi_page_ap_stack.set_visible_child_name("access-points-list-scrolled-window")
+        wifi_page_ap_stack.reveal_child("access-points-list-scrolled-window")
 
     def on_bluetooth_qsb_reveal_button_clicked(*_):
-        pages_stack.set_visible_child_name("bluetooth-page")
+        pages_stack.reveal_child("bluetooth-page")
 
     def on_page_close_button_clicked(*_):
-        pages_stack.set_visible_child_name("main-page")
+        pages_stack.reveal_child("main-page")
 
     def on_outside_click(*_):
         ret.hide()
@@ -80,7 +80,7 @@ def ControlPanel():
             ret.hide()
 
     def on_visible(*_):
-        pages_stack.set_visible_child_name("main-page")
+        pages_stack.reveal_child("main-page")
 
     wifi_qsb_reveal_button.connect("clicked", on_wifi_qsb_reveal_button_clicked)
     wifi_page_close_button.connect("clicked", on_page_close_button_clicked)

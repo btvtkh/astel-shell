@@ -80,7 +80,7 @@ def NotificationList():
 
             return GLib.SOURCE_REMOVE
 
-        outer_revealer.set_reveal_child(False)
+        outer_revealer.conceal()
         GLib.timeout_add(
             outer_revealer.get_transition_duration(),
             on_outer_timeout_end
@@ -96,7 +96,7 @@ def NotificationList():
             notifications_box.get_children()[0].destroy()
 
         notifications_box.insert(notification, 0)
-        outer_revealer.set_reveal_child(True)
+        outer_revealer.reveal()
 
     def on_clear_button_clicked(*_):
         for n in notifd.get_notifications():

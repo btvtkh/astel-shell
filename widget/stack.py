@@ -10,8 +10,13 @@ class Stack(Gtk.Stack, Base):
     ):
         Gtk.Stack.__init__(self, **kwargs)
         self.set_children(children)
-
         Base.__init__(self, css_classes = css_classes)
+
+    def reveal_child(self, child):
+        if isinstance(child, Gtk.Widget):
+            self.set_visible_child(child)
+        elif isinstance(child, str):
+            self.set_visible_child_name(child)
 
     def destroy_named(self, name):
         for child in self.get_children():

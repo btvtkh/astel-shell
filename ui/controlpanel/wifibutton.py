@@ -84,4 +84,6 @@ def WifiQSB():
     toggle_button.connect("clicked", on_toggle_button_clicked)
     if wifi: wifi.connect("notify::enabled", on_wifi_enabled)
 
+    on_wifi_enabled()
+
     return ret

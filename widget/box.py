@@ -12,7 +12,7 @@ class Box(Gtk.Box, Base):
         self.set_children(children)
         Base.__init__(self, css_classes = css_classes)
 
-    def insert(self, widget, index):
+    def add_at_index(self, widget, index):
         self.add(widget)
         self.reorder_child(widget, index)
 

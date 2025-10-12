@@ -80,7 +80,7 @@ def NotificationList():
 
             return GLib.SOURCE_REMOVE
 
-        outer_revealer.conceal()
+        outer_revealer.set_reveal_child(False)
         GLib.timeout_add(
             outer_revealer.get_transition_duration(),
             on_outer_timeout_end
@@ -95,8 +95,8 @@ def NotificationList():
         if notifications_box.get_children() and isinstance(notifications_box.get_children()[0], Widget.Label):
             notifications_box.get_children()[0].destroy()
 
-        notifications_box.insert(notification, 0)
-        outer_revealer.reveal()
+        notifications_box.add_at_index(notification, 0)
+        outer_revealer.set_reveal_child(True)
 
     def on_clear_button_clicked(*_):
         for n in notifd.get_notifications():

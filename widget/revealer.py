@@ -10,12 +10,6 @@ class Revealer(Gtk.Revealer, Base):
         Gtk.Revealer.__init__(self, **kwargs)
         Base.__init__(self, css_classes = css_classes)
 
-    def reveal(self):
-        self.set_reveal_child(True)
-
-    def conceal(self):
-        self.set_reveal_child(False)
-
     def set_child(self, widget):
         if self.get_child():
             self.get_child().destroy()

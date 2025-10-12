@@ -60,7 +60,7 @@ def AccessPointMenu(ap, ap_stack):
     connect_button = Widget.get_child_by_name(ret, "access-point-menu-connect-button")
 
     def close_menu():
-        ap_stack.reveal_child("access-points-list-scrolled-window")
+        ap_stack.set_visible_child_name("access-points-list-scrolled-window")
 
         def on_transition_duration_end():
             ret.destroy()
@@ -156,7 +156,7 @@ def AccessPointItem(ap, ap_stack):
     def on_clicked(*_):
         ap_menu = AccessPointMenu(ap, ap_stack)
         ap_stack.add_named(ap_menu, ap_menu.get_name())
-        ap_stack.reveal_child(ap_menu)
+        ap_stack.set_visible_child(ap_menu)
 
     clicked_handler = ret.connect("clicked", on_clicked)
 
@@ -260,7 +260,7 @@ def WifiPage():
             ])
 
             ap_stack.destroy_named("access-point-menu")
-            ap_stack.reveal_child("access-points-list-scrolled-window")
+            ap_stack.set_visible_child_name("access-points-list-scrolled-window")
 
     def on_access_points(*_):
         if wifi and wifi.get_enabled() and wifi.get_access_points():
@@ -287,7 +287,7 @@ def WifiPage():
 
     def on_page_close_button_clicked(*_):
         ap_stack.destroy_named("access-point-menu")
-        ap_stack.reveal_child("access-points-list-scrolled-window")
+        ap_stack.set_visible_child_name("access-points-list-scrolled-window")
 
     page_close_button.connect("clicked", on_page_close_button_clicked)
     toggle_switch.connect("notify::active", on_toggle_switch_active)

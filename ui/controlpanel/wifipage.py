@@ -105,6 +105,7 @@ def AccessPointMenu(ap, ap_stack):
 
     obscure_button_clicked_handler = None
     password_entry_visibility_handler = None
+
     if password_entry and obscure_button:
         obscure_button_clicked_handler = obscure_button.connect("clicked", on_obscure_button_clicked)
         password_entry_visibility_handler = password_entry.connect("notify::visibility", on_password_entry_visibility)
@@ -112,8 +113,10 @@ def AccessPointMenu(ap, ap_stack):
     def on_destroy(*_):
         close_button.disconnect(close_button_clicked_handler)
         connect_button.disconnect(connect_button_clicked_handler)
+
         if obscure_button and obscure_button_clicked_handler:
             obscure_button.disconnect(obscure_button_clicked_handler)
+
         if password_entry and password_entry_visibility_handler:
             password_entry.disconnect(password_entry_visibility_handler)
 
@@ -142,6 +145,7 @@ def AccessPointItem(ap, ap_stack):
                             label = ap.get_ssid() or "Unnamed"
                         ),
                         Widget.Label(
+                            name = "access-point-bssid-label",
                             css_classes = ["bssid-label"],
                             halign = Gtk.Align.START,
                             xalign = 0,
@@ -153,17 +157,28 @@ def AccessPointItem(ap, ap_stack):
         )
     )
 
+    bssid_label = Widget.get_child_by_name(ret, "access-point-bssid-label")
+
+    def on_active_access_point(*_):
+        if wifi.get_active_access_point() == ap:
+            bssid_label.set_label("Connected")
+        elif bssid_label.get_label() == "Connected":
+            bssid_label.set_label(ap.get_bssid())
+
     def on_clicked(*_):
         ap_menu = AccessPointMenu(ap, ap_stack)
         ap_stack.add_named(ap_menu, ap_menu.get_name())
         ap_stack.set_visible_child(ap_menu)
 
+    active_access_point_handler = wifi.connect("notify::active-access-point", on_active_access_point)
     clicked_handler = ret.connect("clicked", on_clicked)
 
     def on_destroy(*_):
+        wifi.disconnect(active_access_point_handler)
         ret.disconnect(clicked_handler)
 
     ret.connect("destroy", on_destroy)
+    on_active_access_point()
 
     return ret
 

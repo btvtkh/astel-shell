@@ -198,8 +198,9 @@ def Launcher():
             ])
 
     def on_search_activate(*_):
-        if apps_box.get_children() and isinstance(apps_box.get_children()[0], Widget.Button):
-                apps_box.get_children()[0].clicked()
+        first_child = apps_box.get_children()[0]
+        if first_child and isinstance(first_child, Widget.Button):
+                first_child.clicked()
 
     def on_power_button_clicked(*_):
         ret.get_application().toggle_window("Powermenu")

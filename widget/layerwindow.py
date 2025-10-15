@@ -91,8 +91,9 @@ class LayerWindow(Gtk.Window, Base):
         return GtkLayerShell.get_keyboard_mode(self)
 
     def set_child(self, widget):
-        if self.get_child():
-            self.get_child().destroy()
+        child = self.get_child()
+        if child:
+            child.destroy()
 
         if isinstance(widget, Gtk.Widget):
             self.add(widget)

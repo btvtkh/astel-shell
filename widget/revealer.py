@@ -11,8 +11,9 @@ class Revealer(Gtk.Revealer, Base):
         Base.__init__(self, css_classes = css_classes)
 
     def set_child(self, widget):
-        if self.get_child():
-            self.get_child().destroy()
+        child = self.get_child()
+        if child:
+            child.destroy()
 
         if isinstance(widget, Gtk.Widget):
             self.add(widget)
